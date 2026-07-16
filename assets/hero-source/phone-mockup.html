@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+    background:
+      radial-gradient(ellipse 140% 55% at 50% -5%, rgba(245,201,106,0.55) 0%, transparent 55%),
+      radial-gradient(ellipse 90% 70% at 100% 25%, rgba(45,180,120,0.6) 0%, transparent 50%),
+      radial-gradient(ellipse 80% 60% at 0% 55%, rgba(30,140,90,0.45) 0%, transparent 50%),
+      radial-gradient(ellipse 110% 60% at 50% 105%, rgba(197,140,30,0.35) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 75%, rgba(16,80,50,0.5) 0%, transparent 55%),
+      linear-gradient(175deg, #1e6648 0%, #0f3028 35%, #081d14 70%, #050f0a 100%);
+    display: flex;
+    flex-direction: column;
+    color: white;
+  }
+
+  /* Dynamic Island */
+  .di {
+    position: absolute;
+    top: 12px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 32px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 20;
+  }
+
+  /* Status bar */
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 22px 6px;
+    flex-shrink: 0;
+  }
+  .status-icons { display: flex; gap: 5px; align-items: center; }
+
+  /* Orb */
+  .orb-wrap {
+    display: flex; justify-content: center;
+    padding: 8px 0 6px;
+    flex-shrink: 0;
+  }
+  .orb {
+    width: 52px; height: 52px; border-radius: 50%; background: transparent;
+    box-shadow: 0 0 28px 10px rgba(227,167,47,0.5), 0 0 65px 28px rgba(227,167,47,0.22), 0 0 120px 50px rgba(227,167,47,0.08);
+    position: relative;
+  }
+
+  /* Chat */
+  .chat {
+    flex: 1;
+    padding: 4px 14px 8px;
+    display: flex; flex-direction: column; gap: 10px;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .bubble-user {
+    align-self: flex-end;
+    background: white; color: #1a1a1a;
+    border-radius: 18px 18px 4px 18px;
+    padding: 11px 14px;
+    max-width: 75%;
+    font-size: 13.5px; line-height: 1.4;
+  }
+  .bubble-time { font-size: 10px; color: rgba(0,0,0,0.38); text-align: right; margin-top: 3px; }
+
+  .bubble-ai {
+    align-self: flex-start;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    border-radius: 4px 18px 18px 18px;
+    padding: 11px 14px;
+    max-width: 92%;
+    font-size: 13px; line-height: 1.5;
+  }
+  .bubble-ai-header {
+    display: flex; align-items: center; gap: 7px; margin-bottom: 6px;
+  }
+  .expert-avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, #f5c96a, #e3a72f);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; color: #102f27; flex-shrink: 0;
+  }
+  .expert-name { font-size: 11.5px; font-weight: 600; }
+  .bubble-ai-time { font-size: 10px; color: rgba(255,255,255,0.38); text-align: right; margin-top: 4px; }
+
+  /* Portfolio card */
+  .portfolio-card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 16px;
+    padding: 13px 14px 11px;
+    flex-shrink: 0;
+  }
+  .portfolio-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 6px;
+  }
+  .portfolio-label {
+    font-size: 10px; color: rgba(255,255,255,0.5);
+    text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
+  }
+  .portfolio-badge {
+    font-size: 9px; font-weight: 700;
+    background: rgba(110,231,183,0.15); color: #6ee7b7;
+    border: 1px solid rgba(110,231,183,0.3);
+    border-radius: 20px; padding: 2px 7px;
+  }
+  .portfolio-value {
+    font-size: 28px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1;
+  }
+  .portfolio-change {
+    font-size: 11.5px; color: rgba(255,255,255,0.6); margin-top: 2px; margin-bottom: 8px;
+  }
+  .portfolio-change span { color: #6ee7b7; font-weight: 600; }
+
+  /* Chart */
+  .chart-wrap { height: 48px; margin-bottom: 9px; }
+  .chart-wrap svg { width: 100%; height: 100%; overflow: visible; }
+
+  /* Stats */
+  .stats-row { display: flex; gap: 6px; }
+  .stat-pill {
+    flex: 1; background: rgba(255,255,255,0.07);
+    border-radius: 10px; padding: 7px 9px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .stat-label { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+  .stat-value { font-size: 12.5px; font-weight: 700; }
+
+  /* Input bar */
+  .input-bar {
+    display: flex; align-items: center;
+    margin: 0 10px 8px;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 28px;
+    padding: 9px 8px 9px 16px;
+    flex-shrink: 0;
+  }
+  .input-text { flex: 1; font-size: 13px; color: rgba(255,255,255,0.38); }
+  .input-btn {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #f5c96a, #e3a72f);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Bottom nav */
+  .bottom-nav {
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 6px 10px 8px; flex-shrink: 0;
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    color: rgba(255,255,255,0.35); font-size: 9px;
+  }
+  .nav-item svg { width: 20px; height: 20px; }
+  .nav-center-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .nav-center-icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, #f5c96a, #e3a72f 50%, #c8841a);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(227,167,47,0.5);
+  }
+  .home-indicator {
+    width: 90px; height: 4px;
+    background: rgba(255,255,255,0.22); border-radius: 2px;
+    margin: 2px auto 6px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="di"></div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span style="font-size:15px;font-weight:600;letter-spacing:-0.3px;">9:41</span>
+    <div class="status-icons">
+      <svg width="17" height="11" viewBox="0 0 17 11" fill="white"><rect x="0" y="3" width="3" height="8" rx="1"/><rect x="4.5" y="2" width="3" height="9" rx="1"/><rect x="9" y="0" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1" opacity="0.3"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="white"><path d="M8 2C10.8 2 13.3 3.2 15 5.2L16 4C14 1.7 11.2 0.4 8 0.4C4.8 0.4 2 1.7 0 4L1 5.2C2.7 3.2 5.2 2 8 2Z" opacity="0.3"/><path d="M8 4.8C10 4.8 11.8 5.6 13.1 7L14.1 5.8C12.5 4.1 10.4 3.2 8 3.2C5.6 3.2 3.5 4.1 1.9 5.8L2.9 7C4.2 5.6 6 4.8 8 4.8Z" opacity="0.6"/><path d="M8 7.6C9.2 7.6 10.3 8.1 11.1 8.9L12.1 7.7C11 6.5 9.6 5.8 8 5.8C6.4 5.8 5 6.5 3.9 7.7L4.9 8.9C5.7 8.1 6.8 7.6 8 7.6Z"/><circle cx="8" cy="10.6" r="1.2"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="white"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="white" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="16" height="8" rx="2" fill="white"/><path d="M23 4.5V7.5C23.8 7.2 24.5 6.5 24.5 6C24.5 5.5 23.8 4.8 23 4.5Z" fill="white" opacity="0.4"/></svg>
+    </div>
+  </div>
+
+  <!-- Orb -->
+  <div class="orb-wrap">
+    <div class="orb">
+      <svg width="52" height="52" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="rg1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fffbe8"/>
+            <stop offset="25%" stop-color="#f5c96a"/>
+            <stop offset="55%" stop-color="#e3a72f"/>
+            <stop offset="80%" stop-color="#2d9e6a"/>
+            <stop offset="100%" stop-color="#0d4a30"/>
+          </linearGradient>
+          <radialGradient id="cg1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fffbe8" stop-opacity="0.95"/>
+            <stop offset="35%" stop-color="#f5c96a" stop-opacity="0.7"/>
+            <stop offset="70%" stop-color="#e3a72f" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#102f27" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="rb"><feGaussianBlur stdDeviation="1.2"/></filter>
+          <filter id="cb"><feGaussianBlur stdDeviation="2.5"/></filter>
+        </defs>
+        <circle cx="36" cy="36" r="26" fill="none" stroke="url(#rg1)" stroke-width="7" opacity="0.35" filter="url(#rb)"/>
+        <circle cx="36" cy="36" r="26" fill="none" stroke="url(#rg1)" stroke-width="2.5"/>
+        <circle cx="36" cy="36" r="7" fill="url(#cg1)" filter="url(#cb)"/>
+        <circle cx="36" cy="36" r="2.5" fill="#fffbe8" opacity="0.85"/>
+        <circle cx="36" cy="36" r="1.2" fill="white"/>
+        <path d="M18 24 A26 26 0 0 1 36 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Chat -->
+  <div class="chat">
+    <!-- User message -->
+    <div style="display:flex;justify-content:flex-end;">
+      <div class="bubble-user">
+        Markets fell today. Should I pause my SIP?
+        <div class="bubble-time">2:14 pm</div>
+      </div>
+    </div>
+
+    <!-- Expert response -->
+    <div class="bubble-ai">
+      <div class="bubble-ai-header">
+        <div class="expert-avatar">R</div>
+        <span class="expert-name">Roz Expert</span>
+      </div>
+      Don't pause — dips mean your SIP buys more units at lower prices. Stay invested. Your portfolio is on track.
+      <div class="bubble-ai-time">2:15 pm</div>
+    </div>
+
+    <!-- Portfolio card -->
+    <div class="portfolio-card">
+      <div class="portfolio-header">
+        <span class="portfolio-label">My Portfolio</span>
+        <span class="portfolio-badge">↑ On track</span>
+      </div>
+      <div class="portfolio-value">₹1,24,830</div>
+      <div class="portfolio-change"><span>↑ ₹18,240 (17.1%)</span> all time</div>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 270 48" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="cf" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#e3a72f" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#e3a72f" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,40 C20,38 35,36 55,33 C70,30 78,34 95,30 C112,26 122,22 140,18 C156,14 164,18 182,13 C198,8 210,6 228,4 C244,2 255,3 270,1 L270,48 L0,48 Z" fill="url(#cf)"/>
+          <path d="M0,40 C20,38 35,36 55,33 C70,30 78,34 95,30 C112,26 122,22 140,18 C156,14 164,18 182,13 C198,8 210,6 228,4 C244,2 255,3 270,1" fill="none" stroke="#e3a72f" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="270" cy="1" r="4" fill="#e3a72f" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="stats-row">
+        <div class="stat-pill"><span class="stat-label">Monthly SIP</span><span class="stat-value">₹8,000</span></div>
+        <div class="stat-pill"><span class="stat-label">Next SIP</span><span class="stat-value">Jun 1</span></div>
+        <div class="stat-pill"><span class="stat-label">Projected</span><span class="stat-value">₹52L</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input bar -->
+  <div class="input-bar">
+    <span class="input-text">Ask your Roz expert...</span>
+    <div class="input-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 11V3M3 7l4-4 4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      home
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      portfolio
+    </div>
+    <div class="nav-center-wrap">
+      <div class="nav-center-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <span style="color:white;font-size:9px;font-weight:600;">Expert</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      insights
+    </div>
+  </div>
+  <div class="home-indicator"></div>
+
+</body>
+</html>

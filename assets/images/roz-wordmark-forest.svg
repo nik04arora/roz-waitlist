@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 170" role="img" aria-labelledby="title desc">
+  <title id="title">Roz wordmark</title>
+  <desc id="desc">Custom handwritten-style Roz wordmark.</desc>
+  <g fill="none" stroke="#063F38" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+
+  <path d="M70 125 C80 92 92 60 103 38 C110 24 122 18 136 22 C153 27 157 46 149 61 C141 77 125 88 102 92 C125 94 145 109 160 132" />
+  <path d="M87 126 C95 90 101 57 107 28" />
+  <path d="M186 126 C164 126 153 111 157 94 C161 76 178 64 196 69 C214 74 222 91 216 107 C211 121 200 126 186 126 Z" />
+  <path d="M249 72 C271 72 292 72 314 72 C292 91 271 109 250 128 C275 128 298 128 322 128" />
+
+  </g>
+</svg>

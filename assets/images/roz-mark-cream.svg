@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Roz mark</title>
+  <desc id="desc">Rounded square icon with custom handwritten-style R.</desc>
+  
+  <g fill="none" stroke="#FFFCF6" stroke-width="42" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M155 362 C177 269 200 177 221 103" />
+    <path d="M177 348 C198 260 228 96 303 106 C361 114 358 197 310 231 C277 254 224 252 190 250" />
+    <path d="M211 252 C266 260 304 306 342 372" />
+  </g>
+</svg>

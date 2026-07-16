@@ -1,0 +1,72 @@
+<svg viewBox="0 0 340 680" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <defs>
+
+    <!-- Titanium band gradient: lighter on edges (light catching curved sides), darker center -->
+    <linearGradient id="ti-main" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#6e6e73"/>
+      <stop offset="6%"   stop-color="#3a3a3c"/>
+      <stop offset="50%"  stop-color="#1c1c1e"/>
+      <stop offset="94%"  stop-color="#3a3a3c"/>
+      <stop offset="100%" stop-color="#6e6e73"/>
+    </linearGradient>
+    <linearGradient id="ti-tb" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#5a5a5e" stop-opacity="0.9"/>
+      <stop offset="8%"   stop-color="#1c1c1e" stop-opacity="0"/>
+      <stop offset="92%"  stop-color="#1c1c1e" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#5a5a5e" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <!-- Top-left specular highlight -->
+    <linearGradient id="spec" x1="0%" y1="0%" x2="60%" y2="60%">
+      <stop offset="0%"  stop-color="rgba(255,255,255,0.22)"/>
+      <stop offset="50%" stop-color="rgba(255,255,255,0.04)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+
+    <!-- Mask: full phone shape minus the screen cutout = frame ring only -->
+    <mask id="ring">
+      <rect width="340" height="680" rx="54" ry="54" fill="white"/>
+      <rect x="11" y="11" width="318" height="658" rx="44" ry="44" fill="black"/>
+    </mask>
+
+    <!-- Full phone clip (for outer boundary) -->
+    <clipPath id="phone-clip">
+      <rect width="340" height="680" rx="54" ry="54"/>
+    </clipPath>
+
+  </defs>
+
+  <!-- ── FRAME RING ── -->
+  <!-- Base titanium colour (left-right gradient) -->
+  <rect width="340" height="680" rx="54" fill="url(#ti-main)" mask="url(#ring)"/>
+  <!-- Top/bottom edge brightening -->
+  <rect width="340" height="680" rx="54" fill="url(#ti-tb)"   mask="url(#ring)"/>
+  <!-- Specular highlight top-left -->
+  <rect width="340" height="680" rx="54" fill="url(#spec)"    mask="url(#ring)"/>
+
+  <!-- Outer perimeter hairline (catches light) -->
+  <rect x="0.5" y="0.5" width="339" height="679" rx="53.5" ry="53.5"
+        fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+
+  <!-- Inner screen-edge shadow (depth) -->
+  <rect x="10.5" y="10.5" width="319" height="659" rx="44.5" ry="44.5"
+        fill="none" stroke="rgba(0,0,0,0.7)" stroke-width="1.5"/>
+
+  <!-- ── SIDE BUTTONS ── -->
+  <!-- Power button — right -->
+  <rect x="337" y="178" width="5" height="68" rx="2.5" ry="2.5" fill="#3c3c3e"/>
+  <rect x="337.5" y="178" width="2" height="68" rx="1.5" ry="1.5" fill="rgba(255,255,255,0.08)"/>
+
+  <!-- Action button — left (small, top) -->
+  <rect x="-2" y="134" width="5" height="28" rx="2.5" ry="2.5" fill="#3c3c3e"/>
+  <rect x="-2" y="134" width="2" height="28" rx="1" ry="1" fill="rgba(255,255,255,0.07)"/>
+
+  <!-- Volume up — left -->
+  <rect x="-2" y="178" width="5" height="40" rx="2.5" ry="2.5" fill="#3c3c3e"/>
+  <rect x="-2" y="178" width="2" height="40" rx="1" ry="1" fill="rgba(255,255,255,0.07)"/>
+
+  <!-- Volume down — left -->
+  <rect x="-2" y="230" width="5" height="40" rx="2.5" ry="2.5" fill="#3c3c3e"/>
+  <rect x="-2" y="230" width="2" height="40" rx="1" ry="1" fill="rgba(255,255,255,0.07)"/>
+
+</svg>

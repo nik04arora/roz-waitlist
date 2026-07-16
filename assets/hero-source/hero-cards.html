@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: transparent;
+    width: 1440px;
+    height: 480px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif;
+    position: relative;
+  }
+
+  /* Shared card base */
+  .card {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 24px;
+    box-shadow: 0 12px 40px rgba(16, 47, 39, 0.14), 0 2px 10px rgba(16, 47, 39, 0.07);
+    color: #1a1a1a;
+    overflow: hidden;
+  }
+
+  /* Fade edges */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      linear-gradient(to right, rgba(253,243,220,0.95) 0%, transparent 14%, transparent 86%, rgba(253,243,220,0.95) 100%),
+      linear-gradient(to bottom, rgba(253,243,220,0.4) 0%, transparent 18%, transparent 72%, rgba(253,243,220,0.98) 100%);
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* ── CARD 1: Portfolio value (left) ── */
+  .card-portfolio {
+    left: 60px;
+    bottom: 70px;
+    width: 200px;
+    padding: 20px;
+    transform: perspective(900px) rotateY(8deg) rotateX(-4deg) scale(0.9);
+    opacity: 0.88;
+  }
+  .card-portfolio .label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+    color: rgba(16,47,39,0.5); text-transform: uppercase; margin-bottom: 6px;
+  }
+  .card-portfolio .ticker {
+    font-size: 12px; font-weight: 700; color: #102f27; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card-portfolio .value {
+    font-size: 42px; font-weight: 800; color: #102f27;
+    letter-spacing: -2px; line-height: 1;
+  }
+  .card-portfolio .change {
+    font-size: 12px; font-weight: 600; color: #059669; margin-top: 6px;
+  }
+
+  /* ── CARD 2: SIP Calculator (center-left) ── */
+  .card-sip {
+    left: 290px;
+    bottom: 44px;
+    width: 340px;
+    padding: 22px 22px 20px;
+    transform: perspective(1000px) rotateY(4deg) rotateX(-2deg);
+    opacity: 0.95;
+  }
+  .card-sip .card-title {
+    font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.45);
+    margin-bottom: 4px;
+  }
+  .card-sip .sip-amount {
+    font-size: 14px; font-weight: 700; color: #1a1a1a;
+    text-align: right; margin-bottom: 12px;
+  }
+  .card-sip .sip-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .sip-track {
+    position: relative; height: 7px; background: rgba(16,47,39,0.1);
+    border-radius: 99px; flex: 1; margin: 0 12px;
+  }
+  .sip-fill {
+    position: absolute; left: 0; top: 0; height: 100%;
+    width: 45%; background: linear-gradient(90deg, #f5c96a, #e3a72f);
+    border-radius: 99px;
+  }
+  .sip-thumb {
+    position: absolute; top: 50%; left: 45%;
+    transform: translate(-50%, -50%);
+    width: 24px; height: 24px; border-radius: 50%;
+    background: linear-gradient(135deg, #f5c96a, #e3a72f);
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; color: white; font-weight: 700;
+  }
+  .sip-tabs {
+    display: flex; gap: 7px; margin-top: 8px;
+  }
+  .sip-tab {
+    flex: 1; text-align: center;
+    font-size: 11px; font-weight: 600;
+    padding: 6px 0; border-radius: 10px;
+    color: rgba(0,0,0,0.4); background: rgba(0,0,0,0.05);
+  }
+  .sip-tab.active {
+    background: linear-gradient(135deg, #f5c96a, #e3a72f);
+    color: white;
+  }
+
+  /* ── CARD 3: Expert Insights (center) ── */
+  .card-insights {
+    left: 50%;
+    transform: translateX(-50%) perspective(1000px) rotateX(-1deg);
+    top: 32px;
+    width: 300px;
+    padding: 18px 20px;
+    opacity: 0.95;
+  }
+  .card-insights .card-header {
+    font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.4);
+    margin-bottom: 14px;
+  }
+  .insight-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .insight-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .insight-icon {
+    width: 32px; height: 32px; border-radius: 9px;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800;
+  }
+  .insight-icon.emerald { background: linear-gradient(135deg, #1a6644, #102f27); color: #e3a72f; }
+  .insight-icon.saffron { background: linear-gradient(135deg, #f5c96a, #e3a72f); color: #102f27; }
+  .insight-icon.teal { background: linear-gradient(135deg, #0d9488, #0f766e); color: white; }
+  .insight-text { font-size: 12px; line-height: 1.45; color: #1a1a1a; font-weight: 500; }
+  .insight-time { font-size: 10px; color: rgba(0,0,0,0.35); margin-top: 2px; }
+
+  /* ── CARD 4: Fund Allocation (right) ── */
+  .card-allocation {
+    right: 280px;
+    top: 28px;
+    width: 230px;
+    padding: 20px;
+    transform: perspective(900px) rotateY(-5deg) rotateX(2deg);
+    opacity: 0.92;
+  }
+  .card-allocation .alloc-header {
+    font-size: 11px; font-weight: 700; color: rgba(0,0,0,0.4);
+    margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .alloc-bar {
+    width: 100%; height: 6px; border-radius: 4px;
+    background: linear-gradient(90deg, #e3a72f 35%, #1a6644 35% 65%, #0d9488 65% 82%, rgba(0,0,0,0.1) 82%);
+    margin-bottom: 14px;
+  }
+  .alloc-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .alloc-row:last-child { margin-bottom: 0; }
+  .alloc-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .alloc-name { font-size: 12px; font-weight: 600; color: #1a1a1a; flex: 1; }
+  .alloc-sub { font-size: 10.5px; color: rgba(0,0,0,0.4); }
+  .alloc-pct { font-size: 12px; font-weight: 700; color: #1a1a1a; }
+
+  /* ── CARD 5: Automated SIP gauge (far right) ── */
+  .card-auto {
+    right: 60px;
+    bottom: 56px;
+    width: 200px;
+    padding: 20px 20px 16px;
+    transform: perspective(900px) rotateY(-7deg) rotateX(-3deg) scale(0.92);
+    opacity: 0.85;
+  }
+  .auto-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    color: rgba(0,0,0,0.4); text-transform: uppercase; text-align: center;
+    margin-bottom: 12px;
+  }
+  .gauge-wrap {
+    position: relative; width: 130px; height: 70px;
+    margin: 0 auto 12px;
+    overflow: hidden;
+  }
+  .gauge-bg {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    border: 12px solid rgba(0,0,0,0.07);
+    clip-path: inset(0 0 50% 0);
+  }
+  .gauge-fill {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%) rotate(-15deg);
+    transform-origin: 50% 100%;
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    border: 12px solid transparent;
+    border-top-color: #e3a72f;
+    border-right-color: #e3a72f;
+    clip-path: inset(0 0 50% 0);
+  }
+  .gauge-value {
+    position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+    font-size: 30px; font-weight: 800; letter-spacing: -1px;
+    background: linear-gradient(135deg, #f5c96a, #e3a72f 50%, #c8841a);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; white-space: nowrap;
+  }
+  .gauge-sub {
+    text-align: center; font-size: 11px; color: rgba(0,0,0,0.4);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Card 1: Portfolio value -->
+  <div class="card card-portfolio">
+    <div class="label">My Portfolio</div>
+    <div class="ticker">
+      <span style="width:16px;height:16px;background:linear-gradient(135deg,#f5c96a,#e3a72f);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:#102f27;font-weight:800;">R</span>
+      Roz Fund
+    </div>
+    <div class="value">+17%</div>
+    <div class="change">↑ All time returns</div>
+  </div>
+
+  <!-- Card 2: SIP Calculator -->
+  <div class="card card-sip">
+    <div class="sip-row">
+      <div class="card-title">If I invest monthly</div>
+      <div class="sip-amount">₹8,000 / mo</div>
+    </div>
+    <div style="position:relative;">
+      <div class="sip-track">
+        <div class="sip-fill"></div>
+        <div class="sip-thumb">‹›</div>
+      </div>
+    </div>
+    <div class="sip-tabs" style="margin-top:16px;">
+      <div class="sip-tab active">10 yrs</div>
+      <div class="sip-tab">15 yrs</div>
+      <div class="sip-tab">20 yrs</div>
+      <div class="sip-tab">25 yrs</div>
+    </div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.07);display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:12px;color:rgba(0,0,0,0.45);">Projected value</span>
+      <span style="font-size:20px;font-weight:800;background:linear-gradient(90deg,#f5c96a,#e3a72f 50%,#c8841a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">₹21.4L</span>
+    </div>
+  </div>
+
+  <!-- Card 3: Expert Insights -->
+  <div class="card card-insights">
+    <div class="card-header">Expert insights · Aug 19</div>
+    <div class="insight-row">
+      <div class="insight-icon emerald">R</div>
+      <div>
+        <div class="insight-text">Markets volatile — your SIP keeps buying at lower prices.</div>
+        <div class="insight-time">11:30 am · Roz Expert</div>
+      </div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-icon saffron">↑</div>
+      <div>
+        <div class="insight-text">Large-cap funds outperformed benchmarks this quarter.</div>
+        <div class="insight-time">9:15 am · Market update</div>
+      </div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-icon teal">₹</div>
+      <div>
+        <div class="insight-text">Your next SIP of ₹8,000 is scheduled for Jun 1.</div>
+        <div class="insight-time">Auto-invest · On track</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4: Fund Allocation -->
+  <div class="card card-allocation">
+    <div class="alloc-header">Your Portfolio</div>
+    <div class="alloc-bar"></div>
+    <div class="alloc-row">
+      <div class="alloc-dot" style="background:#e3a72f;"></div>
+      <div>
+        <div class="alloc-name">Large Cap</div>
+        <div class="alloc-sub">Mirae, Axis</div>
+      </div>
+      <div class="alloc-pct">35%</div>
+    </div>
+    <div class="alloc-row">
+      <div class="alloc-dot" style="background:#1a6644;"></div>
+      <div>
+        <div class="alloc-name">Mid Cap</div>
+        <div class="alloc-sub">HDFC, Kotak</div>
+      </div>
+      <div class="alloc-pct">30%</div>
+    </div>
+    <div class="alloc-row">
+      <div class="alloc-dot" style="background:#0d9488;"></div>
+      <div>
+        <div class="alloc-name">Flexi Cap</div>
+        <div class="alloc-sub">Parag, UTI</div>
+      </div>
+      <div class="alloc-pct">17%</div>
+    </div>
+    <div class="alloc-row">
+      <div class="alloc-dot" style="background:rgba(0,0,0,0.15);"></div>
+      <div>
+        <div class="alloc-name">Debt</div>
+        <div class="alloc-sub">SBI, ICICI</div>
+      </div>
+      <div class="alloc-pct">18%</div>
+    </div>
+  </div>
+
+  <!-- Card 5: Automated SIP -->
+  <div class="card card-auto">
+    <div class="auto-label">Automated</div>
+    <div class="gauge-wrap">
+      <div class="gauge-bg"></div>
+      <div class="gauge-fill"></div>
+      <div class="gauge-value">₹8K</div>
+    </div>
+    <div class="gauge-sub">Of your monthly SIP<br/>invested automatically</div>
+  </div>
+
+</body>
+</html>
