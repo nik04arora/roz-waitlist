@@ -16,6 +16,13 @@ function normalizeIndianPhone(value) {
   return '+91' + digits;
 }
 
+function getSupabaseRestUrl(value) {
+  return String(value || '')
+    .trim()
+    .replace(/\/+$/, '')
+    .replace(/\/rest\/v1$/i, '') + '/rest/v1/waitlist';
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -54,7 +61,7 @@ module.exports = async function handler(req, res) {
 
   try {
     var response = await fetch(
-      supabaseUrl.replace(/\/$/, '') + '/rest/v1/waitlist',
+      getSupabaseRestUrl(supabaseUrl),
       {
         method: 'POST',
         headers: {
