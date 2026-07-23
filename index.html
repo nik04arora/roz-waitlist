@@ -190,6 +190,8 @@
   .sticky-title-wrapper [data-sticky-title="heading"] {
     width: 100%;
     margin: 0;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
   }
   /* Stacked beats share one slot; vertical position set in JS (matches Roz) */
   .sticky-title-wrapper [data-sticky-title="heading"].is--stacked {
@@ -1545,31 +1547,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script src="assets/js/lenis.min.js"></script>
 <script>
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
   const lenis = new Lenis({
-    lerp: 0.65, // Lower = smoother/more inertia (try values between 0.01 - 0.3)
-    duration: 1.2, // Optional: animation duration multiplier
-    // easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Optional: custom easing
-  })
+    // Lenis defaults to 0.1. The previous 0.65 value followed wheel input so
+    // closely that most of the interpolation was effectively lost.
+    lerp: prefersReducedMotion ? 1 : 0.1,
+    smoothWheel: !prefersReducedMotion,
+    syncTouch: false,
+  });
 
   // Synchronize Lenis scrolling with GSAP's ScrollTrigger plugin
   lenis.on("scroll", ScrollTrigger.update);
 
-  ScrollTrigger.scrollerProxy(document.documentElement, {
-    scrollTop(value) {
-      if (arguments.length) {
-        lenis.scrollTo(value, { immediate: true });
-      }
-      return lenis.scroll;
-    },
-    getBoundingClientRect() {
-      return {
-        top: 0,
-        left: 0,
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-    },
-  });
   ScrollTrigger.addEventListener("refresh", () => {
     if (typeof lenis.resize === "function") lenis.resize();
   });
@@ -2021,18 +2013,6 @@ function init3dPerspectiveHover() {
   return destroy;
 }
 
-function getStickyLineBlocks(heading) {
-  const linesWrap = heading.querySelector(".sticky-title-heading-lines");
-  if (linesWrap) {
-    const blocks = [...linesWrap.querySelectorAll(".u-d-block")];
-    if (blocks.length) return blocks;
-    return [linesWrap];
-  }
-  const direct = [...heading.querySelectorAll(":scope > .u-d-block")];
-  if (direct.length) return direct;
-  return [heading];
-}
-
 function measureStickyHeadingTop(wrap, heading) {
   const inner = wrap.querySelector(".sticky-title-inner");
   if (!inner) return 0;
@@ -2062,51 +2042,8 @@ function measureStickyHeadingTop(wrap, heading) {
 function layoutStickyHeadings(wrap, beats) {
   beats.forEach((beat) => {
     const top = measureStickyHeadingTop(wrap, beat.heading);
-    gsap.set(beat.heading, { top, y: 0, yPercent: 0, transform: "none" });
+    gsap.set(beat.heading, { top });
   });
-}
-
-function hideStickyBeat(beat, animate = false) {
-  const { heading, lineBlocks, support, prompts, inlineImage } = beat;
-  const dur = animate ? 0.22 : 0;
-  gsap.to(heading, { autoAlpha: 0, duration: dur, ease: "power2.in", onComplete: () => gsap.set(heading, { zIndex: 1 }) });
-  gsap.to(lineBlocks, { autoAlpha: 0, duration: dur, ease: "power2.in" });
-  if (support) gsap.to(support, { autoAlpha: 0, duration: dur });
-  if (prompts) {
-    gsap.to(prompts, { autoAlpha: 0, duration: dur, onComplete: () => prompts.setAttribute("aria-hidden", "true") });
-  }
-  if (inlineImage.length) gsap.to(inlineImage, { scale: 0, duration: dur });
-}
-
-function showStickyBeatDirect(wrap, beat, beats, index, animate = false) {
-  beats.forEach((other, j) => {
-    if (j === index) return;
-    hideStickyBeat(other, animate);
-  });
-
-  const { heading, lineBlocks, support, prompts, inlineImage } = beat;
-  const top = measureStickyHeadingTop(wrap, heading);
-  gsap.set(heading, { visibility: "visible", zIndex: 2, top, yPercent: 0, transform: "none" });
-
-  if (animate) {
-    gsap.fromTo(heading, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.38, ease: "power2.out" });
-    gsap.fromTo(lineBlocks, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.38, ease: "power2.out", stagger: 0.06 });
-    if (inlineImage.length) gsap.to(inlineImage, { scale: 1, duration: 0.38, ease: "back.out(1.4)" });
-    if (support) gsap.fromTo(support, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out", delay: 0.1 });
-    if (prompts) {
-      prompts.removeAttribute("aria-hidden");
-      gsap.fromTo(prompts, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.28, ease: "power2.out", delay: 0.08 });
-    }
-  } else {
-    gsap.set(heading, { autoAlpha: 1, y: 0 });
-    gsap.set(lineBlocks, { autoAlpha: 1, y: 0 });
-    if (inlineImage.length) gsap.set(inlineImage, { scale: 1 });
-    if (support) gsap.set(support, { autoAlpha: 1, y: 0 });
-    if (prompts) {
-      prompts.removeAttribute("aria-hidden");
-      gsap.set(prompts, { autoAlpha: 1 });
-    }
-  }
 }
 
 function initStickyTitleScroll() {
@@ -2124,82 +2061,116 @@ function initStickyTitleScroll() {
 
     const beats = headings.map((heading) => {
       heading.setAttribute("aria-label", heading.textContent.trim());
-      return {
-        heading,
-        lineBlocks: getStickyLineBlocks(heading),
-        support: heading.querySelector(".sticky-title-support"),
-        prompts: heading.querySelector(".sticky-title-prompts"),
-        inlineImage: heading.querySelectorAll(".inline-image"),
-        isAbsolute: heading.classList.contains("u-p-absolute"),
-      };
+      const prompts = heading.querySelector(".sticky-title-prompts");
+      if (prompts) prompts.removeAttribute("aria-hidden");
+      return { heading };
     });
 
-    beats.forEach((beat) => {
-      gsap.set(beat.heading, { visibility: "visible" });
-      hideStickyBeat(beat);
+    gsap.set(headings, {
+      autoAlpha: 0,
+      y: 18,
+      visibility: "visible",
+      force3D: true,
     });
-
     layoutStickyHeadings(wrap, beats);
 
-    let activeBeatIndex = -1;
-
-    let hasInit = false;
-    function setActiveBeat(index) {
-      if (index === activeBeatIndex) return;
-      const shouldAnimate = hasInit;
-      activeBeatIndex = index;
-      if (index < 0) {
-        beats.forEach((b) => hideStickyBeat(b, shouldAnimate));
-        return;
-      }
-      showStickyBeatDirect(wrap, beats[index], beats, index, shouldAnimate);
+    let accessibleBeat = -1;
+    function updateAccessibleBeat(index) {
+      if (index === accessibleBeat) return;
+      accessibleBeat = index;
+      beats.forEach((beat, index) => {
+        beat.heading.setAttribute(
+          "aria-hidden",
+          index === accessibleBeat ? "false" : "true"
+        );
+      });
     }
 
-    function beatIndexForProgress(progress) {
-      return Math.min(
-        beats.length - 1,
-        Math.floor(progress * beats.length)
+    let activeBeat = -1;
+    function showBeat(index, animate = true) {
+      if (index === activeBeat) return;
+
+      const previousBeat = activeBeat;
+      const direction = previousBeat < 0 || index > previousBeat ? 1 : -1;
+      activeBeat = index;
+      updateAccessibleBeat(index);
+      gsap.killTweensOf(headings);
+
+      const inactiveHeadings = headings.filter(
+        (_, headingIndex) => headingIndex !== index
+      );
+
+      if (!animate || prefersReducedMotion) {
+        gsap.set(inactiveHeadings, { autoAlpha: 0, y: 0 });
+        gsap.set(headings[index], { autoAlpha: 1, y: 0 });
+        return;
+      }
+
+      // Finish the change even if the wheel gesture stops exactly on a beat
+      // boundary. This avoids leaving two large statements half-overlapped.
+      gsap.to(inactiveHeadings, {
+        autoAlpha: 0,
+        y: -direction * 12,
+        duration: 0.16,
+        ease: "power2.in",
+        overwrite: true,
+      });
+      gsap.fromTo(
+        headings[index],
+        { autoAlpha: 0, y: direction * 18 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.34,
+          delay: 0.08,
+          ease: "power2.out",
+          overwrite: true,
+        }
       );
     }
 
-    function syncStickyTitleBeats() {
-      const rect = wrap.getBoundingClientRect();
-      const travelRange = wrap.offsetHeight - window.innerHeight;
+    const stickyTrigger = ScrollTrigger.create({
+      trigger: wrap,
+      start: "top top",
+      end: "bottom bottom",
+      invalidateOnRefresh: true,
+      onUpdate(self) {
+        const index = Math.min(
+          beats.length - 1,
+          Math.floor(self.progress * beats.length)
+        );
+        showBeat(index, activeBeat >= 0);
+      },
+    });
 
-      if (rect.top > 0 || travelRange <= 0) {
-        setActiveBeat(-1);
-        return;
-      }
-
-      if (rect.bottom <= window.innerHeight) {
-        setActiveBeat(beats.length - 1);
-        return;
-      }
-
-      const progress = gsap.utils.clamp(0, 1, -rect.top / travelRange);
-      setActiveBeat(beatIndexForProgress(progress));
-    }
+    showBeat(
+      Math.min(
+        beats.length - 1,
+        Math.floor(stickyTrigger.progress * beats.length)
+      ),
+      false
+    );
 
     function refreshStickyTitleLayout() {
       layoutStickyHeadings(wrap, beats);
-      syncStickyTitleBeats();
+      stickyTrigger.refresh();
     }
 
-    wrap.__rozSyncStickyTitle = syncStickyTitleBeats;
+    wrap.__rozSyncStickyTitle = () => {
+      stickyTrigger.update();
+      showBeat(
+        Math.min(
+          beats.length - 1,
+          Math.floor(stickyTrigger.progress * beats.length)
+        ),
+        false
+      );
+    };
     wrap.__rozLayoutStickyTitle = () => layoutStickyHeadings(wrap, beats);
-    refreshStickyTitleLayout();
-    requestAnimationFrame(() => { hasInit = true; });
 
-    if (typeof lenis !== "undefined") {
-      lenis.on("scroll", syncStickyTitleBeats);
-    } else {
-      window.addEventListener("scroll", syncStickyTitleBeats, { passive: true });
-    }
-
-    window.addEventListener("resize", () => layoutStickyHeadings(wrap, beats), {
+    window.addEventListener("resize", refreshStickyTitleLayout, {
       passive: true,
     });
-    ScrollTrigger.addEventListener("refresh", refreshStickyTitleLayout);
   });
 }
 
