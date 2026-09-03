@@ -1,6 +1,7 @@
 function json(res, status, body) {
   res.statusCode = status;
-  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-store');
   res.end(JSON.stringify(body));
 }
 
@@ -56,7 +57,9 @@ module.exports = async function handler(req, res) {
     phone: phone,
     country: 'IN',
     source: body && body.source ? String(body.source).slice(0, 80) : 'website',
-    user_agent: req.headers['user-agent'] || null
+    user_agent: req.headers['user-agent']
+      ? String(req.headers['user-agent']).slice(0, 300)
+      : null
   };
 
   try {
@@ -75,7 +78,14 @@ module.exports = async function handler(req, res) {
     );
 
     var text = await response.text();
-    var data = text ? JSON.parse(text) : null;
+    var data = null;
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch (_error) {
+        data = { message: text.slice(0, 500) };
+      }
+    }
 
     if (!response.ok) {
       if (data && data.code === '23505') {

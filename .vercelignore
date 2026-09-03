@@ -1,0 +1,9 @@
+.git/
+.vercel/
+.claude/
+.DS_Store
+**/.DS_Store
+/*.png
+/index.original.html
+/og-options/
+/serve.sh
