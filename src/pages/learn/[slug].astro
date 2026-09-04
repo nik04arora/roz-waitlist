@@ -1,0 +1,28 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { articlePath, isVisibleArticle } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('learn')).filter(isVisibleArticle);
+  return posts.map((post) => ({
+    params: { slug: articlePath(post.id).split('/').filter(Boolean).at(-1) },
+    props: { post }
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const author = await getEntry(post.data.author);
+const reviewer = await getEntry(post.data.reviewer);
+const relatedEntries = await Promise.all(post.data.relatedArticles.map((entry) => getEntry(entry)));
+const related = relatedEntries.filter((entry) => entry?.collection === 'learn');
+
+if (!author || !reviewer) {
+  throw new Error(`Missing author or reviewer for ${post.id}`);
+}
+---
+
+<ArticleLayout post={post} author={author} reviewer={reviewer} headings={headings} related={related}>
+  <Content />
+</ArticleLayout>

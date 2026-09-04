@@ -1,0 +1,18 @@
+[
+  {
+    "id": "roz-editorial-team",
+    "name": "Roz Editorial Team",
+    "role": "Investor education",
+    "bio": "The Roz editorial team creates plain-language educational content for first-time mutual fund investors in India.",
+    "schemaType": "Organization",
+    "credentials": []
+  },
+  {
+    "id": "roz-investment-team",
+    "name": "Roz Investment Team",
+    "role": "Content reviewer",
+    "bio": "The Roz investment team reviews educational content for factual accuracy, balance, and appropriate mutual fund risk disclosures.",
+    "schemaType": "Organization",
+    "credentials": []
+  }
+]

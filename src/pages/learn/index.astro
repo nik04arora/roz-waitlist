@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleCard from '../../components/ArticleCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { isVisibleArticle, sortNewestFirst, topicLabel } from '../../lib/content';
+
+const posts = sortNewestFirst((await getCollection('learn')).filter(isVisibleArticle));
+const topics = [...new Set(posts.flatMap((post) => post.data.topics))].sort();
+const canonical = 'https://www.rozinvest.com/learn/';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': canonical,
+      name: 'Learn about investing with Roz',
+      description: 'Plain-language guides to mutual funds, SIPs, investing basics, and building long-term wealth in India.',
+      url: canonical,
+      inLanguage: 'en-IN',
+      isPartOf: { '@id': 'https://www.rozinvest.com/#website' }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.rozinvest.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Learn', item: canonical }
+      ]
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="Learn About Mutual Funds and Investing | Roz Invest"
+  description="Plain-language guides to mutual funds, SIPs, investing basics, and building long-term wealth for first-time investors in India."
+  canonicalPath="/learn/"
+  jsonLd={jsonLd}
+>
+  <section class="learn-hero">
+    <div class="shell learn-hero__grid">
+      <div>
+        <p class="eyebrow">Roz Learn</p>
+        <h1>Investing, explained like a human.</h1>
+      </div>
+      <p class="learn-hero__intro">Clear, carefully reviewed guides for people who want to build wealth without learning an entirely new language first.</p>
+    </div>
+  </section>
+
+  <section class="learn-section shell">
+    {topics.length > 0 && (
+      <nav class="topic-nav" aria-label="Learn topics">
+        <span>Explore:</span>
+        {topics.map((topic) => <a href={`/learn/topics/${topic}/`}>{topicLabel(topic)}</a>)}
+      </nav>
+    )}
+
+    <div class="section-heading">
+      <p class="eyebrow">Start here</p>
+      <h2>Guides for first-time investors</h2>
+    </div>
+
+    {posts.length > 0 ? (
+      <div class="article-list">{posts.map((post) => <ArticleCard post={post} />)}</div>
+    ) : (
+      <div class="empty-state">
+        <h2>Our first guides are being reviewed.</h2>
+        <p>Investor education deserves care. We will publish here once each guide has passed editorial and investment review.</p>
+      </div>
+    )}
+  </section>
+</BaseLayout>

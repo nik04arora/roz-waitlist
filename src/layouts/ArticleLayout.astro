@@ -1,0 +1,149 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import { articlePath, topicLabel } from '../lib/content';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  post: CollectionEntry<'learn'>;
+  author: CollectionEntry<'authors'>;
+  reviewer: CollectionEntry<'authors'>;
+  headings: Heading[];
+  related: CollectionEntry<'learn'>[];
+}
+
+const { post, author, reviewer, headings, related } = Astro.props;
+const path = articlePath(post.id);
+const canonical = new URL(path, Astro.site).toString();
+const visibleHeadings = headings.filter((heading) => heading.depth === 2);
+const dateFormat = new Intl.DateTimeFormat('en-IN', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric'
+});
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${canonical}#article`,
+      headline: post.data.title,
+      description: post.data.description,
+      image: new URL(post.data.heroImage, Astro.site).toString(),
+      datePublished: post.data.publishedAt.toISOString(),
+      dateModified: post.data.updatedAt.toISOString(),
+      inLanguage: 'en-IN',
+      mainEntityOfPage: canonical,
+      author: {
+        '@type': author.data.schemaType,
+        name: author.data.name,
+        url: new URL(`/learn/authors/${author.id}/`, Astro.site).toString()
+      },
+      reviewedBy: {
+        '@type': reviewer.data.schemaType,
+        name: reviewer.data.name,
+        url: new URL(`/learn/authors/${reviewer.id}/`, Astro.site).toString()
+      },
+      publisher: { '@id': 'https://www.rozinvest.com/#organization' }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.rozinvest.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Learn', item: 'https://www.rozinvest.com/learn/' },
+        { '@type': 'ListItem', position: 3, name: post.data.title, item: canonical }
+      ]
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title={`${post.data.title} | Roz Invest`}
+  description={post.data.description}
+  canonicalPath={path}
+  image={post.data.heroImage}
+  imageAlt={post.data.heroImageAlt}
+  robots={post.data.status === 'draft' ? 'noindex,nofollow' : 'index,follow,max-image-preview:large'}
+  type="article"
+  publishedAt={post.data.publishedAt}
+  updatedAt={post.data.updatedAt}
+  jsonLd={jsonLd}
+>
+  <div class="article-shell">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span aria-hidden="true">/</span>
+      <a href="/learn/">Learn</a><span aria-hidden="true">/</span>
+      <span aria-current="page">{post.data.title}</span>
+    </nav>
+
+    <header class="article-header">
+      <div class="card-meta">
+        <a href={`/learn/topics/${post.data.topics[0]}/`}>{topicLabel(post.data.topics[0])}</a>
+        {post.data.status === 'draft' && <span class="draft-badge">Draft preview</span>}
+      </div>
+      <h1>{post.data.title}</h1>
+      <p class="article-summary">{post.data.summary}</p>
+      <dl class="byline">
+        <div><dt>Written by</dt><dd><a href={`/learn/authors/${author.id}/`}>{author.data.name}</a></dd></div>
+        <div><dt>Reviewed by</dt><dd><a href={`/learn/authors/${reviewer.id}/`}>{reviewer.data.name}</a></dd></div>
+        <div><dt>Updated</dt><dd><time datetime={post.data.updatedAt.toISOString()}>{dateFormat.format(post.data.updatedAt)}</time></dd></div>
+      </dl>
+    </header>
+
+    <figure class="article-hero">
+      <img src={post.data.heroImage} alt={post.data.heroImageAlt} width="1200" height="630" />
+    </figure>
+
+    <div class="article-grid">
+      {visibleHeadings.length > 1 && (
+        <aside class="toc" aria-labelledby="toc-title">
+          <h2 id="toc-title">In this guide</h2>
+          <ol>
+            {visibleHeadings.map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}
+          </ol>
+        </aside>
+      )}
+      <article class="prose">
+        <div class="key-answer">
+          <p class="eyebrow">The short answer</p>
+          <p>{post.data.summary}</p>
+        </div>
+        <slot />
+
+        <section class="sources" aria-labelledby="sources-title">
+          <h2 id="sources-title">Sources</h2>
+          <ol>
+            {post.data.sources.map((source) => (
+              <li><a href={source.url} rel="external">{source.title}</a> — {source.publisher}</li>
+            ))}
+          </ol>
+        </section>
+
+        <aside class="disclosure" aria-label="Important information">
+          <strong>Important:</strong> This content is for educational and informational purposes only. It is not investment advice or a recommendation to buy or sell any mutual fund scheme. Mutual fund investments are subject to market risks. Read all scheme-related documents carefully.
+        </aside>
+      </article>
+    </div>
+
+    {related.length > 0 && (
+      <section class="related" aria-labelledby="related-title">
+        <h2 id="related-title">Keep learning</h2>
+        <div class="related-grid">
+          {related.map((item) => (
+            <a href={articlePath(item.id)}>
+              <span>{topicLabel(item.data.topics[0])}</span>
+              <strong>{item.data.title}</strong>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</BaseLayout>

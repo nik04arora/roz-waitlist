@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { isVisibleArticle, sortNewestFirst, topicLabel } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('learn')).filter(isVisibleArticle);
+  const topics = [...new Set(posts.flatMap((post) => post.data.topics))];
+  return topics.map((topic) => ({
+    params: { topic },
+    props: { topic, posts: sortNewestFirst(posts.filter((post) => post.data.topics.includes(topic))) }
+  }));
+}
+
+const { topic, posts } = Astro.props;
+const label = topicLabel(topic);
+const path = `/learn/topics/${topic}/`;
+const canonical = new URL(path, Astro.site).toString();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: `${label} guides`,
+      url: canonical,
+      inLanguage: 'en-IN',
+      isPartOf: { '@id': 'https://www.rozinvest.com/#website' }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.rozinvest.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Learn', item: 'https://www.rozinvest.com/learn/' },
+        { '@type': 'ListItem', position: 3, name: label, item: canonical }
+      ]
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title={`${label} Guides | Roz Invest`}
+  description={`Plain-language ${label.toLowerCase()} guides for first-time investors in India, reviewed by the Roz team.`}
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <section class="topic-hero">
+    <div class="shell">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/learn/">Learn</a><span>/</span><span aria-current="page">{label}</span></nav>
+      <p class="eyebrow">Topic</p>
+      <h1>{label}</h1>
+      <p>Reviewed guides to help you understand {label.toLowerCase()} and make more informed decisions.</p>
+    </div>
+  </section>
+  <section class="learn-section shell">
+    <div class="article-list">{posts.map((post) => <ArticleCard post={post} />)}</div>
+  </section>
+</BaseLayout>

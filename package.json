@@ -1,0 +1,22 @@
+{
+  "name": "roz-invest-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "node scripts/prepare-dev.mjs && ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build && node scripts/copy-legacy.mjs && node scripts/generate-sitemap.mjs && node scripts/validate-build.mjs",
+    "build:preview": "INCLUDE_DRAFTS=true npm run build",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/mdx": "^8.0.0",
+    "astro": "^7.2.10",
+    "typescript": "^6.0.3"
+  }
+}

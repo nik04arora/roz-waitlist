@@ -1,0 +1,73 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { isVisibleArticle, sortNewestFirst } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('learn')).filter(isVisibleArticle);
+  const ids = [...new Set(posts.flatMap((post) => [post.data.author.id, post.data.reviewer.id]))];
+  return Promise.all(ids.map(async (id) => {
+    const author = await getEntry('authors', id);
+    if (!author) throw new Error(`Missing author profile: ${id}`);
+    return { params: { author: id }, props: { author, posts } };
+  }));
+}
+
+interface Props {
+  author: CollectionEntry<'authors'>;
+  posts: CollectionEntry<'learn'>[];
+}
+
+const { author, posts } = Astro.props;
+const authored = sortNewestFirst(posts.filter((post) => post.data.author.id === author.id));
+const reviewed = sortNewestFirst(posts.filter((post) => post.data.reviewer.id === author.id));
+const path = `/learn/authors/${author.id}/`;
+const canonical = new URL(path, Astro.site).toString();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  url: canonical,
+  mainEntity: {
+    '@type': author.data.schemaType,
+    name: author.data.name,
+    description: author.data.bio,
+    url: canonical
+  }
+};
+---
+
+<BaseLayout
+  title={`${author.data.name} | Roz Invest`}
+  description={author.data.bio}
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <section class="author-hero">
+    <div class="shell author-hero__inner">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/learn/">Learn</a><span>/</span><span aria-current="page">{author.data.name}</span></nav>
+      <p class="eyebrow">{author.data.role}</p>
+      <h1>{author.data.name}</h1>
+      <p>{author.data.bio}</p>
+      {author.data.credentials.length > 0 && (
+        <ul class="credentials">{author.data.credentials.map((credential) => <li>{credential}</li>)}</ul>
+      )}
+    </div>
+  </section>
+
+  <section class="learn-section shell">
+    {authored.length > 0 && (
+      <>
+        <div class="section-heading"><p class="eyebrow">Written by</p><h2>Latest guides</h2></div>
+        <div class="article-list">{authored.map((post) => <ArticleCard post={post} />)}</div>
+      </>
+    )}
+    {reviewed.length > 0 && author.id !== 'roz-editorial-team' && (
+      <>
+        <div class="section-heading reviewed-heading"><p class="eyebrow">Reviewed by</p><h2>Reviewed guides</h2></div>
+        <div class="article-list">{reviewed.map((post) => <ArticleCard post={post} />)}</div>
+      </>
+    )}
+  </section>
+</BaseLayout>

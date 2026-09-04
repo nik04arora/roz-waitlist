@@ -1,0 +1,12 @@
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="/" aria-label="Roz Invest home">
+      <img src="/assets/images/roz-wordmark-cream.svg" width="84" height="37" alt="Roz" />
+    </a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a aria-current={Astro.url.pathname.startsWith('/learn') ? 'page' : undefined} href="/learn/">Learn</a>
+      <a href="/about/">About</a>
+      <a class="nav-cta" href="/#waitlist">Join waitlist</a>
+    </nav>
+  </div>
+</header>

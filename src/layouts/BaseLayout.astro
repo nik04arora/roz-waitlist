@@ -1,0 +1,38 @@
+---
+import SeoHead from '../components/SeoHead.astro';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/learn.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  image?: string;
+  imageAlt?: string;
+  robots?: string;
+  type?: 'website' | 'article';
+  publishedAt?: Date;
+  updatedAt?: Date;
+  jsonLd?: Record<string, unknown>;
+}
+
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <SeoHead {...props} />
+    <GoogleAnalytics />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <SiteHeader />
+    <main id="main-content">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

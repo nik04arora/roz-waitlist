@@ -1,1 +1,7 @@
 .vercel
+.astro/
+dist/
+node_modules/
+npm-debug.log*
+static/*
+!static/.gitkeep
