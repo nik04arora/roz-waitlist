@@ -28,18 +28,11 @@ const learn = defineCollection({
     author: reference('authors'),
     reviewer: reference('authors').optional(),
     topics: z.array(z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)).min(1),
-    hero: z.discriminatedUnion('type', [
-      z.object({
-        type: z.literal('image'),
-        src: z.string().startsWith('/'),
-        alt: z.string().min(10)
-      }),
-      z.object({
-        type: z.literal('quote'),
-        quote: z.string().min(20).max(180),
-        attribution: z.string().min(2).max(60)
-      })
-    ]),
+    hero: z.object({
+      type: z.literal('quote'),
+      quote: z.string().min(20).max(180),
+      attribution: z.string().min(2).max(60)
+    }),
     socialImage: z.string().startsWith('/'),
     socialImageAlt: z.string().min(10).max(180),
     articleImages: z.array(z.string().startsWith('/')).length(3),

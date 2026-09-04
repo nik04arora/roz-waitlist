@@ -12,12 +12,12 @@ hero:
   type: quote
   quote: "The better method often matches when your money becomes available—not the method that won last year."
   attribution: Roz Invest
-socialImage: /assets/images/learn/sip-vs-lump-sum-social.png
-socialImageAlt: "Two paths representing regular SIP instalments and a one-time lump-sum investment joining a shared long-term route"
+socialImage: /assets/images/learn/sip-vs-lump-sum-quote-social.png
+socialImageAlt: "Quote: The better method often matches when your money becomes available—not the method that won last year"
 articleImages:
-  - /assets/images/learn/sip-vs-lump-sum-16x9.jpg
-  - /assets/images/learn/sip-vs-lump-sum-4x3.jpg
-  - /assets/images/learn/sip-vs-lump-sum-1x1.jpg
+  - /assets/images/learn/sip-vs-lump-sum-quote-16x9.jpg
+  - /assets/images/learn/sip-vs-lump-sum-quote-4x3.jpg
+  - /assets/images/learn/sip-vs-lump-sum-quote-1x1.jpg
 sources:
   - title: Systematic Investment Plan (SIP)
     url: https://www.amfiindia.com/investor/become-mf-distributor?zoneName=sip

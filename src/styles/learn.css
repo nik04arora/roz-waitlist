@@ -111,7 +111,6 @@ p { text-wrap: pretty; }
 .byline dt { color: var(--muted); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; }
 .byline dd { margin: 0; font-weight: 600; }
 .article-hero { margin: 0 0 clamp(3rem, 8vw, 6rem); background: var(--forest); border-radius: 1.25rem; overflow: hidden; }
-.article-hero--image img { width: 100%; aspect-ratio: 1200 / 630; object-fit: cover; }
 .article-hero--quote { position: relative; display: flex; min-height: clamp(20rem, 52vw, 39rem); flex-direction: column; justify-content: flex-end; padding: clamp(2rem, 7vw, 6rem); color: var(--cream); }
 .article-hero--quote::before { content: '“'; position: absolute; top: -0.12em; right: 0.12em; color: rgba(227, 167, 47, 0.16); font-family: Georgia, serif; font-size: clamp(15rem, 38vw, 36rem); line-height: 1; }
 .article-hero--quote blockquote { position: relative; max-width: 14ch; margin: 0; font-family: 'Instrument Sans SemiCondensed', 'Suisse Intl', sans-serif; font-size: clamp(2.4rem, 6.6vw, 5.5rem); font-weight: 600; letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance; }

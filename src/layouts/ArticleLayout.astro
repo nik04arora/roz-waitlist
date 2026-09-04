@@ -114,16 +114,10 @@ const jsonLd = {
       </dl>
     </header>
 
-    {post.data.hero.type === 'image' ? (
-      <figure class="article-hero article-hero--image">
-        <img src={post.data.hero.src} alt={post.data.hero.alt} width="1200" height="630" />
-      </figure>
-    ) : (
-      <figure class="article-hero article-hero--quote">
-        <blockquote>“{post.data.hero.quote}”</blockquote>
-        <figcaption>— {post.data.hero.attribution}</figcaption>
-      </figure>
-    )}
+    <figure class="article-hero article-hero--quote">
+      <blockquote>“{post.data.hero.quote}”</blockquote>
+      <figcaption>— {post.data.hero.attribution}</figcaption>
+    </figure>
 
     <div class="article-grid">
       {visibleHeadings.length > 1 && (
