@@ -14,12 +14,12 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const author = await getEntry(post.data.author);
-const reviewer = await getEntry(post.data.reviewer);
+const reviewer = post.data.reviewer ? await getEntry(post.data.reviewer) : undefined;
 const relatedEntries = await Promise.all(post.data.relatedArticles.map((entry) => getEntry(entry)));
 const related = relatedEntries.filter((entry) => entry?.collection === 'learn');
 
-if (!author || !reviewer) {
-  throw new Error(`Missing author or reviewer for ${post.id}`);
+if (!author || (post.data.reviewer && !reviewer)) {
+  throw new Error(`Missing author or reviewer record for ${post.id}`);
 }
 ---
 

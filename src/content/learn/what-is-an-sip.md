@@ -53,7 +53,8 @@ faqs:
     answer: Neither method is always better. An SIP may suit money that becomes available monthly. A lump sum invests available money immediately. The right choice depends on your cash flow, goal and comfort with risk.
   - question: Can I stop or change an SIP?
     answer: Usually, yes, but pause, cancellation and change rules differ by fund house and platform. Stopping an SIP normally stops future payments; it does not automatically sell units you already own.
-relatedArticles: []
+relatedArticles:
+  - sip-vs-lump-sum
 status: published
 featured: true
 disclosure: educational
@@ -97,6 +98,8 @@ This is an illustration, not a return forecast. It ignores expenses, exit loads,
 - **Less temptation to time the market:** the schedule reduces the number of buy-or-wait decisions you make.
 
 These are practical benefits, not promises of better returns. A lump-sum investment may perform better when markets rise after it is invested; an SIP may feel easier to maintain when your money becomes available gradually.
+
+If you are deciding what to do with money that is already available, read our guide to [SIP versus lump sum investing](/learn/sip-vs-lump-sum/).
 
 ## What risks remain?
 

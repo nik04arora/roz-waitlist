@@ -23,10 +23,10 @@ const learn = defineCollection({
     summary: z.string().min(40).max(320),
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date(),
-    reviewedAt: z.coerce.date(),
-    reviewBy: z.coerce.date(),
+    reviewedAt: z.coerce.date().optional(),
+    reviewBy: z.coerce.date().optional(),
     author: reference('authors'),
-    reviewer: reference('authors'),
+    reviewer: reference('authors').optional(),
     topics: z.array(z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)).min(1),
     hero: z.discriminatedUnion('type', [
       z.object({
@@ -65,8 +65,14 @@ const learn = defineCollection({
     (entry) => entry.updatedAt >= entry.publishedAt,
     { message: 'updatedAt must be on or after publishedAt' }
   ).refine(
-    (entry) => entry.reviewedAt >= entry.updatedAt,
+    (entry) => !entry.reviewedAt || entry.reviewedAt >= entry.updatedAt,
     { message: 'reviewedAt must be on or after updatedAt' }
+  ).refine(
+    (entry) => Boolean(entry.reviewer) === Boolean(entry.reviewedAt),
+    { message: 'reviewer and reviewedAt must be provided together' }
+  ).refine(
+    (entry) => !entry.reviewBy || Boolean(entry.reviewedAt),
+    { message: 'reviewBy requires reviewedAt' }
   )
 });
 

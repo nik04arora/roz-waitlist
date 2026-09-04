@@ -12,7 +12,7 @@ interface Heading {
 interface Props {
   post: CollectionEntry<'learn'>;
   author: CollectionEntry<'authors'>;
-  reviewer: CollectionEntry<'authors'>;
+  reviewer?: CollectionEntry<'authors'>;
   headings: Heading[];
   related: CollectionEntry<'learn'>[];
 }
@@ -24,7 +24,8 @@ const visibleHeadings = headings.filter((heading) => heading.depth === 2);
 const dateFormat = new Intl.DateTimeFormat('en-IN', {
   day: 'numeric',
   month: 'long',
-  year: 'numeric'
+  year: 'numeric',
+  timeZone: 'UTC'
 });
 const displayName = (person: CollectionEntry<'authors'>) =>
   [person.data.honorificPrefix, person.data.name].filter(Boolean).join(' ');
@@ -54,7 +55,7 @@ const jsonLd = {
       mainEntityOfPage: canonical,
       isPartOf: { '@id': 'https://www.rozinvest.com/#website' },
       author: personSchema(author),
-      reviewedBy: personSchema(reviewer),
+      ...(reviewer ? { reviewedBy: personSchema(reviewer) } : {}),
       citation: post.data.sources.map((source) => source.url),
       keywords: post.data.topics.map(topicLabel),
       publisher: { '@id': 'https://www.rozinvest.com/#organization' }
@@ -107,8 +108,8 @@ const jsonLd = {
       <p class="article-summary">{post.data.summary}</p>
       <dl class="byline">
         <div><dt>Written by</dt><dd><a href={`/learn/authors/${author.id}/`}>{displayName(author)}</a></dd></div>
-        <div><dt>Reviewed by</dt><dd><a href={`/learn/authors/${reviewer.id}/`}>{displayName(reviewer)}</a></dd></div>
-        <div><dt>Reviewed</dt><dd><time datetime={post.data.reviewedAt.toISOString()}>{dateFormat.format(post.data.reviewedAt)}</time></dd></div>
+        {reviewer && <div><dt>Reviewed by</dt><dd><a href={`/learn/authors/${reviewer.id}/`}>{displayName(reviewer)}</a></dd></div>}
+        {post.data.reviewedAt && <div><dt>Reviewed</dt><dd><time datetime={post.data.reviewedAt.toISOString()}>{dateFormat.format(post.data.reviewedAt)}</time></dd></div>}
         <div><dt>Updated</dt><dd><time datetime={post.data.updatedAt.toISOString()}>{dateFormat.format(post.data.updatedAt)}</time></dd></div>
       </dl>
     </header>

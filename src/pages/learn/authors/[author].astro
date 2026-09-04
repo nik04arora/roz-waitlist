@@ -7,7 +7,10 @@ import { isVisibleArticle, sortNewestFirst } from '../../../lib/content';
 
 export async function getStaticPaths() {
   const posts = (await getCollection('learn')).filter(isVisibleArticle);
-  const ids = [...new Set(posts.flatMap((post) => [post.data.author.id, post.data.reviewer.id]))];
+  const ids = [...new Set(posts.flatMap((post) => [
+    post.data.author.id,
+    post.data.reviewer?.id
+  ]).filter((id): id is string => Boolean(id)))];
   return Promise.all(ids.map(async (id) => {
     const author = await getEntry('authors', id);
     if (!author) throw new Error(`Missing author profile: ${id}`);
@@ -22,7 +25,7 @@ interface Props {
 
 const { author, posts } = Astro.props;
 const authored = sortNewestFirst(posts.filter((post) => post.data.author.id === author.id));
-const reviewed = sortNewestFirst(posts.filter((post) => post.data.reviewer.id === author.id));
+const reviewed = sortNewestFirst(posts.filter((post) => post.data.reviewer?.id === author.id));
 const path = `/learn/authors/${author.id}/`;
 const canonical = new URL(path, Astro.site).toString();
 const displayName = [author.data.honorificPrefix, author.data.name].filter(Boolean).join(' ');
