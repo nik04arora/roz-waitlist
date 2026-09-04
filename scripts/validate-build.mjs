@@ -96,30 +96,20 @@ for (const file of checkedFiles) {
   if (!noindex && !sitemap.includes(`<loc>${canonical}</loc>`)) {
     throw new Error(`Indexable page missing from sitemap: ${canonical}`);
   }
+  if (noindex && sitemap.includes(`<loc>${canonical}</loc>`)) {
+    throw new Error(`Noindex page must not appear in sitemap: ${canonical}`);
+  }
+
+  const isLearnArticle = /^https:\/\/www\.rozinvest\.com\/learn\/(?!authors\/|topics\/$|topics\/|$)[^/]+\/$/.test(canonical);
+  if (isLearnArticle && !html.includes('"@type":"BlogPosting"')) {
+    throw new Error(`BlogPosting JSON-LD is missing: ${canonical}`);
+  }
 
   const hrefs = [...html.matchAll(/href=["']([^"']+)["']/gi)].map((match) => match[1]);
   for (const href of hrefs) {
     if (/^(https?:|mailto:|tel:|javascript:|#)/i.test(href)) continue;
     if (href.startsWith('/api/')) continue;
     await localTargetExists(href, file);
-  }
-}
-
-const draftPath = resolve(dist, 'learn/what-is-an-sip/index.html');
-if (includeDrafts) {
-  await access(draftPath);
-  const draft = await readFile(draftPath, 'utf8');
-  if (!draft.includes('noindex,nofollow')) throw new Error('Draft preview must be noindex.');
-  if (!draft.includes('"@type":"Article"')) throw new Error('Article JSON-LD is missing.');
-  if (sitemap.includes('https://www.rozinvest.com/learn/what-is-an-sip/')) {
-    throw new Error('Draft article must not appear in the sitemap.');
-  }
-} else {
-  try {
-    await access(draftPath);
-    throw new Error('Draft article leaked into the production build.');
-  } catch (error) {
-    if (error instanceof Error && error.message === 'Draft article leaked into the production build.') throw error;
   }
 }
 

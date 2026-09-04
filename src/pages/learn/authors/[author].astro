@@ -25,6 +25,7 @@ const authored = sortNewestFirst(posts.filter((post) => post.data.author.id === 
 const reviewed = sortNewestFirst(posts.filter((post) => post.data.reviewer.id === author.id));
 const path = `/learn/authors/${author.id}/`;
 const canonical = new URL(path, Astro.site).toString();
+const displayName = [author.data.honorificPrefix, author.data.name].filter(Boolean).join(' ');
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
@@ -32,27 +33,31 @@ const jsonLd = {
   mainEntity: {
     '@type': author.data.schemaType,
     name: author.data.name,
+    ...(author.data.honorificPrefix ? { honorificPrefix: author.data.honorificPrefix } : {}),
+    ...(author.data.schemaType === 'Person' ? { jobTitle: author.data.role } : {}),
     description: author.data.bio,
-    url: canonical
+    url: canonical,
+    ...(author.data.profileUrl ? { sameAs: [author.data.profileUrl] } : {})
   }
 };
 ---
 
 <BaseLayout
-  title={`${author.data.name} | Roz Invest`}
+  title={`${displayName} | Roz Invest`}
   description={author.data.bio}
   canonicalPath={path}
   jsonLd={jsonLd}
 >
   <section class="author-hero">
     <div class="shell author-hero__inner">
-      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/learn/">Learn</a><span>/</span><span aria-current="page">{author.data.name}</span></nav>
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/learn/">Learn</a><span>/</span><span aria-current="page">{displayName}</span></nav>
       <p class="eyebrow">{author.data.role}</p>
-      <h1>{author.data.name}</h1>
+      <h1>{displayName}</h1>
       <p>{author.data.bio}</p>
       {author.data.credentials.length > 0 && (
         <ul class="credentials">{author.data.credentials.map((credential) => <li>{credential}</li>)}</ul>
       )}
+      {author.data.profileUrl && <a class="profile-link" href={author.data.profileUrl} rel="me external">View professional profile <span aria-hidden="true">↗</span></a>}
     </div>
   </section>
 

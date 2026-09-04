@@ -26,30 +26,37 @@ const dateFormat = new Intl.DateTimeFormat('en-IN', {
   month: 'long',
   year: 'numeric'
 });
+const displayName = (person: CollectionEntry<'authors'>) =>
+  [person.data.honorificPrefix, person.data.name].filter(Boolean).join(' ');
+
+const personSchema = (person: CollectionEntry<'authors'>) => ({
+  '@type': person.data.schemaType,
+  name: person.data.name,
+  url: new URL(`/learn/authors/${person.id}/`, Astro.site).toString(),
+  ...(person.data.schemaType === 'Person' ? { jobTitle: person.data.role } : {}),
+  ...(person.data.honorificPrefix ? { honorificPrefix: person.data.honorificPrefix } : {}),
+  ...(person.data.profileUrl ? { sameAs: person.data.profileUrl } : {})
+});
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': 'Article',
+      '@type': 'BlogPosting',
       '@id': `${canonical}#article`,
       headline: post.data.title,
       description: post.data.description,
-      image: new URL(post.data.heroImage, Astro.site).toString(),
+      abstract: post.data.summary,
+      image: post.data.articleImages.map((image) => new URL(image, Astro.site).toString()),
       datePublished: post.data.publishedAt.toISOString(),
       dateModified: post.data.updatedAt.toISOString(),
       inLanguage: 'en-IN',
       mainEntityOfPage: canonical,
-      author: {
-        '@type': author.data.schemaType,
-        name: author.data.name,
-        url: new URL(`/learn/authors/${author.id}/`, Astro.site).toString()
-      },
-      reviewedBy: {
-        '@type': reviewer.data.schemaType,
-        name: reviewer.data.name,
-        url: new URL(`/learn/authors/${reviewer.id}/`, Astro.site).toString()
-      },
+      isPartOf: { '@id': 'https://www.rozinvest.com/#website' },
+      author: personSchema(author),
+      reviewedBy: personSchema(reviewer),
+      citation: post.data.sources.map((source) => source.url),
+      keywords: post.data.topics.map(topicLabel),
       publisher: { '@id': 'https://www.rozinvest.com/#organization' }
     },
     {
@@ -59,6 +66,14 @@ const jsonLd = {
         { '@type': 'ListItem', position: 2, name: 'Learn', item: 'https://www.rozinvest.com/learn/' },
         { '@type': 'ListItem', position: 3, name: post.data.title, item: canonical }
       ]
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: post.data.faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer }
+      }))
     }
   ]
 };
@@ -68,8 +83,8 @@ const jsonLd = {
   title={`${post.data.title} | Roz Invest`}
   description={post.data.description}
   canonicalPath={path}
-  image={post.data.heroImage}
-  imageAlt={post.data.heroImageAlt}
+  image={post.data.socialImage}
+  imageAlt={post.data.socialImageAlt}
   robots={post.data.status === 'draft' ? 'noindex,nofollow' : 'index,follow,max-image-preview:large'}
   type="article"
   publishedAt={post.data.publishedAt}
@@ -91,15 +106,23 @@ const jsonLd = {
       <h1>{post.data.title}</h1>
       <p class="article-summary">{post.data.summary}</p>
       <dl class="byline">
-        <div><dt>Written by</dt><dd><a href={`/learn/authors/${author.id}/`}>{author.data.name}</a></dd></div>
-        <div><dt>Reviewed by</dt><dd><a href={`/learn/authors/${reviewer.id}/`}>{reviewer.data.name}</a></dd></div>
+        <div><dt>Written by</dt><dd><a href={`/learn/authors/${author.id}/`}>{displayName(author)}</a></dd></div>
+        <div><dt>Reviewed by</dt><dd><a href={`/learn/authors/${reviewer.id}/`}>{displayName(reviewer)}</a></dd></div>
+        <div><dt>Reviewed</dt><dd><time datetime={post.data.reviewedAt.toISOString()}>{dateFormat.format(post.data.reviewedAt)}</time></dd></div>
         <div><dt>Updated</dt><dd><time datetime={post.data.updatedAt.toISOString()}>{dateFormat.format(post.data.updatedAt)}</time></dd></div>
       </dl>
     </header>
 
-    <figure class="article-hero">
-      <img src={post.data.heroImage} alt={post.data.heroImageAlt} width="1200" height="630" />
-    </figure>
+    {post.data.hero.type === 'image' ? (
+      <figure class="article-hero article-hero--image">
+        <img src={post.data.hero.src} alt={post.data.hero.alt} width="1200" height="630" />
+      </figure>
+    ) : (
+      <figure class="article-hero article-hero--quote">
+        <blockquote>“{post.data.hero.quote}”</blockquote>
+        <figcaption>— {post.data.hero.attribution}</figcaption>
+      </figure>
+    )}
 
     <div class="article-grid">
       {visibleHeadings.length > 1 && (
@@ -117,6 +140,16 @@ const jsonLd = {
         </div>
         <slot />
 
+        <section class="faq" aria-labelledby="faq-title">
+          <h2 id="faq-title">Frequently asked questions</h2>
+          {post.data.faqs.map((faq) => (
+            <div class="faq-item">
+              <h3>{faq.question}</h3>
+              <p>{faq.answer}</p>
+            </div>
+          ))}
+        </section>
+
         <section class="sources" aria-labelledby="sources-title">
           <h2 id="sources-title">Sources</h2>
           <ol>
@@ -125,6 +158,15 @@ const jsonLd = {
             ))}
           </ol>
         </section>
+
+        <aside class="article-cta" aria-label="Roz Invest waitlist">
+          <div>
+            <p class="eyebrow">Invest with clarity</p>
+            <h2>Ready for a simpler way to invest?</h2>
+            <p>{post.data.cta.description}</p>
+          </div>
+          <a class="article-cta__button" href={post.data.cta.href}>{post.data.cta.label}</a>
+        </aside>
 
         <aside class="disclosure" aria-label="Important information">
           <strong>Important:</strong> This content is for educational and informational purposes only. It is not investment advice or a recommendation to buy or sell any mutual fund scheme. Mutual fund investments are subject to market risks. Read all scheme-related documents carefully.

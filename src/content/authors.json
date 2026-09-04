@@ -1,18 +1,26 @@
 [
   {
-    "id": "roz-editorial-team",
-    "name": "Roz Editorial Team",
-    "role": "Investor education",
-    "bio": "The Roz editorial team creates plain-language educational content for first-time mutual fund investors in India.",
-    "schemaType": "Organization",
-    "credentials": []
+    "id": "nikhil-arora",
+    "name": "Nikhil Arora",
+    "role": "Founder, Roz Invest",
+    "bio": "Nikhil Arora is the founder of Roz Invest, where he works to make mutual fund investing easier to understand for first-time investors in India.",
+    "schemaType": "Person",
+    "credentials": [
+      "Founder, Roz Invest"
+    ],
+    "profileUrl": "https://www.linkedin.com/in/nikhil04arora/"
   },
   {
-    "id": "roz-investment-team",
-    "name": "Roz Investment Team",
-    "role": "Content reviewer",
-    "bio": "The Roz investment team reviews educational content for factual accuracy, balance, and appropriate mutual fund risk disclosures.",
-    "schemaType": "Organization",
-    "credentials": []
+    "id": "mazhar-arif",
+    "name": "Mazhar Arif",
+    "role": "Chartered Accountant and finance professional",
+    "bio": "Mazhar Arif is a Mumbai-based Chartered Accountant with nearly four decades of experience in auditing, mutual fund distribution and wealth management.",
+    "schemaType": "Person",
+    "honorificPrefix": "CA",
+    "credentials": [
+      "Chartered Accountant",
+      "Director, Abacus Corporation Private Limited"
+    ],
+    "profileUrl": "https://www.linkedin.com/in/mazhar-arif-58304198/"
   }
 ]
