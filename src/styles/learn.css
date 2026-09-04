@@ -86,6 +86,8 @@ p { text-wrap: pretty; }
 .section-heading h2 { margin: 0; }
 .article-list { border-top: 1px solid var(--line); }
 .article-card { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr) auto; gap: clamp(1rem, 4vw, 4rem); align-items: start; padding: clamp(2rem, 5vw, 3.75rem) 0; border-bottom: 1px solid var(--line); }
+.article-card__heading { min-width: 0; }
+.article-card__heading .card-meta { margin-bottom: 0.75rem; }
 .article-card h2 { margin: 0; font-size: clamp(1.65rem, 3.8vw, 2.65rem); }
 .article-card h2 a { text-decoration: none; }
 .article-card p { margin: 0; color: var(--muted); }
