@@ -66,6 +66,9 @@ const learn = defineCollection({
   ).refine(
     (entry) => !entry.reviewBy || Boolean(entry.reviewedAt),
     { message: 'reviewBy requires reviewedAt' }
+  ).refine(
+    (entry) => entry.status !== 'published' || Boolean(entry.reviewer && entry.reviewedAt && entry.reviewBy),
+    { message: 'published articles require reviewer, reviewedAt and reviewBy' }
   )
 });
 

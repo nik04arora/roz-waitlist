@@ -3,9 +3,9 @@ title: What Is SIP? Meaning, Benefits and Risks for Beginners
 description: What is SIP in mutual funds? Learn how it works, its benefits, costs and risks for beginners in India, with a simple ₹5,000 example.
 summary: An SIP lets you invest a fixed amount in a mutual fund on a regular schedule, such as every month. It can build a habit, but it cannot guarantee profit or prevent losses.
 publishedAt: 2026-09-03
-updatedAt: 2026-09-03
-reviewedAt: 2026-09-03
-reviewBy: 2027-03-03
+updatedAt: 2026-09-07
+reviewedAt: 2026-09-07
+reviewBy: 2027-03-07
 author: nikhil-arora
 reviewer: mazhar-arif
 topics:
@@ -54,6 +54,7 @@ faqs:
   - question: Can I stop or change an SIP?
     answer: Usually, yes, but pause, cancellation and change rules differ by fund house and platform. Stopping an SIP normally stops future payments; it does not automatically sell units you already own.
 relatedArticles:
+  - what-is-a-mutual-fund
   - sip-vs-lump-sum
 status: published
 featured: true
@@ -64,7 +65,7 @@ disclosure: educational
 
 A systematic investment plan, usually called an SIP, is a way to invest a fixed amount in a mutual fund at regular intervals. Many people invest monthly after receiving their salary. Available dates, frequencies and minimum amounts vary by scheme and platform.
 
-An SIP is not a separate investment product, a bank deposit or a guaranteed-return plan. It is simply a way to buy units of the mutual fund scheme you choose. The value of those units can go up or down.
+An SIP is not a separate investment product, a bank deposit or a guaranteed-return plan. It is simply a way to buy units of [a mutual fund scheme](/learn/what-is-a-mutual-fund/). The value of those units can go up or down.
 
 ## How an SIP works
 

@@ -3,8 +3,11 @@ title: "SIP vs Lump Sum: Which Is Better for You?"
 description: "SIP vs lump sum: compare how each mutual fund investment method works, its risks and when it may fit your cash flow, with simple examples for India."
 summary: "An SIP may fit money you receive monthly, while a lump sum invests money that is already available. Neither is always better—the right method depends on your cash flow, goal, time horizon and ability to handle market falls."
 publishedAt: 2026-09-04
-updatedAt: 2026-09-04
+updatedAt: 2026-09-07
+reviewedAt: 2026-09-07
+reviewBy: 2027-03-07
 author: nikhil-arora
+reviewer: mazhar-arif
 topics:
   - investing-basics
   - mutual-funds
@@ -56,6 +59,7 @@ faqs:
   - question: Can SIP guarantee better returns in a falling market?
     answer: No. Later instalments may buy more units when NAVs are lower, but the total investment can still lose value. Rupee-cost averaging does not assure a profit or protect against losses in a declining market.
 relatedArticles:
+  - what-is-a-mutual-fund
   - what-is-an-sip
 status: published
 featured: true
@@ -64,7 +68,7 @@ disclosure: comparison
 
 ## SIP vs lump sum: what is the difference?
 
-An SIP and a lump sum are two ways of putting money into a mutual fund scheme. They are **not two different investment products**. The scheme you choose determines where the money is invested and how much risk you take.
+An SIP and a lump sum are two ways of putting money into [a mutual fund scheme](/learn/what-is-a-mutual-fund/). They are **not two different investment products**. The scheme you choose determines where the money is invested and how much risk you take.
 
 With a systematic investment plan, or SIP, you invest an amount at regular intervals—often monthly. With a lump sum, you invest an available amount in one transaction. If you are new to the first method, start with our plain-language explanation of [what an SIP is and how it works](/learn/what-is-an-sip/).
 
