@@ -70,7 +70,7 @@ faqs:
 relatedArticles:
   - what-is-a-mutual-fund
   - what-is-an-sip
-  - sip-vs-lump-sum
+  - direct-vs-regular-mutual-funds
 status: published
 featured: true
 disclosure: educational
@@ -161,7 +161,7 @@ SIP instalments buy at different net asset values. This can average purchase pri
 
 Direct and regular plans are plans of the same mutual fund scheme. They generally have the same portfolio and fund manager, but separate expense ratios and NAVs.
 
-A direct plan has a lower expense ratio because distributor commission is not included. A regular plan includes distribution costs. Lower recurring cost can improve the amount retained over time, but a direct investor must be able to select and monitor suitable schemes independently or obtain separately paid advice.
+A direct plan has a lower expense ratio because distributor commission is not included. A regular plan includes distribution costs. Lower recurring cost can improve the amount retained over time, but a direct investor must be able to select and monitor suitable schemes independently or obtain separately paid advice. Read the full [direct versus regular mutual funds comparison](/learn/direct-vs-regular-mutual-funds/) before choosing.
 
 A mutual fund distributor and a SEBI-registered investment adviser do not provide the same service or follow the same payment model. Understand how anyone helping you is registered and paid.
 

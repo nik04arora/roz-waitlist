@@ -56,7 +56,7 @@ faqs:
 relatedArticles:
   - what-is-a-mutual-fund
   - sip-vs-lump-sum
-  - how-to-invest-10000-per-month-in-mutual-funds
+  - direct-vs-regular-mutual-funds
 status: published
 featured: true
 disclosure: educational
@@ -118,7 +118,7 @@ Keep money for emergencies and near-term expenses separate. You do not want to b
 Starting an SIP does not remove the costs attached to the underlying mutual fund. Check these before investing:
 
 - **Total expense ratio (TER):** this is the yearly cost of running the scheme. It is deducted from the scheme's assets and is already reflected in the NAV.
-- **Direct versus regular plan:** both invest in the same portfolio. A regular plan includes distributor costs, so its expense ratio is generally higher than that of the direct plan.
+- **Direct versus regular plan:** both invest in the same portfolio. A regular plan includes distributor costs, so its expense ratio is generally higher than that of the direct plan. Compare the support and costs in our [direct versus regular mutual funds guide](/learn/direct-vs-regular-mutual-funds/).
 - **Exit load:** some schemes charge a fee if you sell units before a stated period. Each SIP instalment buys units on a different date, so the holding period may be checked separately for each instalment.
 - **Tax:** selling units may create a taxable capital gain. The tax depends on the fund type, how long you held the units, your situation and the rules in force when you sell.
 

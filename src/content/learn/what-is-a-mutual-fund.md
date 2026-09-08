@@ -66,8 +66,8 @@ faqs:
     answer: Minimum purchase and SIP amounts differ by scheme, fund house and platform. Start with an amount that fits your cash flow without using money needed for emergencies or near-term expenses.
 relatedArticles:
   - what-is-an-sip
-  - sip-vs-lump-sum
   - how-to-invest-10000-per-month-in-mutual-funds
+  - direct-vs-regular-mutual-funds
 status: published
 featured: true
 disclosure: educational
@@ -193,7 +193,7 @@ Read the latest scheme information document and fund-house disclosures before in
 
 Direct and regular plans are two plans of the same scheme. They normally share the same portfolio and fund manager but have separate expense ratios and NAVs.
 
-A direct plan does not include distributor commission in its expense ratio, so its expense ratio is lower than the regular plan of the same scheme. A regular plan is routed through a mutual fund distributor and includes distribution costs.
+A direct plan does not include distributor commission in its expense ratio, so its expense ratio is lower than the regular plan of the same scheme. A regular plan is routed through a mutual fund distributor and includes distribution costs. Our guide to [direct versus regular mutual funds](/learn/direct-vs-regular-mutual-funds/) explains the cost, service and switching trade-offs in detail.
 
 Lower cost matters, but cost is not the only decision. A direct investor must be able to select and monitor suitable schemes independently or separately pay a SEBI-registered investment adviser for advice. Distributor support is not the same as fee-based investment advice, so understand how the person helping you is registered and paid.
 
