@@ -56,6 +56,7 @@ faqs:
 relatedArticles:
   - what-is-a-mutual-fund
   - sip-vs-lump-sum
+  - how-to-invest-10000-per-month-in-mutual-funds
 status: published
 featured: true
 disclosure: educational
@@ -99,6 +100,8 @@ This is an illustration, not a return forecast. It ignores expenses, exit loads,
 - **Less temptation to time the market:** the schedule reduces the number of buy-or-wait decisions you make.
 
 These are practical benefits, not promises of better returns. A lump-sum investment may perform better when markets rise after it is invested; an SIP may feel easier to maintain when your money becomes available gradually.
+
+If ₹10,000 is the amount you can set aside monthly, our [₹10,000 mutual fund investing guide](/learn/how-to-invest-10000-per-month-in-mutual-funds/) shows how the goal and time horizon should shape the plan before you select a scheme.
 
 If you are deciding what to do with money that is already available, read our guide to [SIP versus lump sum investing](/learn/sip-vs-lump-sum/).
 

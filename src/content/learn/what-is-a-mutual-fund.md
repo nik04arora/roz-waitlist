@@ -67,6 +67,7 @@ faqs:
 relatedArticles:
   - what-is-an-sip
   - sip-vs-lump-sum
+  - how-to-invest-10000-per-month-in-mutual-funds
 status: published
 featured: true
 disclosure: educational
@@ -211,6 +212,8 @@ Once you choose a suitable scheme, you can decide how to put money into it.
 An [SIP is a recurring investment method](/learn/what-is-an-sip/), often used when investible money becomes available monthly. A lump sum is a one-time purchase using money already available. Neither method changes what the mutual fund owns or guarantees a better result.
 
 If both choices are genuinely available, our guide to [SIP versus lump-sum investing](/learn/sip-vs-lump-sum/) explains the trade-offs without trying to predict the market.
+
+If ₹10,000 becomes available from your income each month, use our [goal-first guide to investing ₹10,000 per month](/learn/how-to-invest-10000-per-month-in-mutual-funds/) to decide what the amount should—and should not—fund.
 
 ## How should a beginner evaluate a mutual fund?
 

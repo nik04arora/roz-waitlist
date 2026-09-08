@@ -61,6 +61,7 @@ faqs:
 relatedArticles:
   - what-is-a-mutual-fund
   - what-is-an-sip
+  - how-to-invest-10000-per-month-in-mutual-funds
 status: published
 featured: true
 disclosure: comparison
@@ -100,6 +101,8 @@ Consider two different situations:
 - **Money available today:** Arjun already has ₹1.2 lakh that he will not need for emergencies or near-term expenses. A lump sum would invest the entire amount now. If he instead invests ₹10,000 each month, part of that ₹1.2 lakh waits outside the scheme during the year.
 
 These examples should not be treated as a return contest. Meera never had ₹1.2 lakh available on day one, while Arjun did. A fair decision starts with the investor's actual cash flow.
+
+For the next decision—how to turn that monthly amount into a goal-based plan—read our guide to [investing ₹10,000 per month in mutual funds](/learn/how-to-invest-10000-per-month-in-mutual-funds/).
 
 ## When might an SIP fit better?
 
