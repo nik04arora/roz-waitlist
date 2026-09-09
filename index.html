@@ -26,6 +26,19 @@
   [data-section="end"] { background-color: var(--background--primary) !important; }
   html.anti-flicker, html.anti-flicker * { visibility: visible !important; opacity: 1 !important; }
   .home_hero-ui { display: none !important; }
+  .home_hero-phone > div,
+  .home_hero-phone > .roz-phone-frame-svg { display: none !important; }
+  .home_hero-phone > .hero-phone-replacement {
+    display: block;
+    width: 398.12px !important;
+    max-width: none !important;
+    height: 738.98px !important;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    translate: -50% -30.56px;
+    z-index: 11;
+  }
   /* Preserve the exact approved hero artwork and its original sizing behavior. */
   .home_hero-bg { content: url("assets/images/home-hero-approved.avif") !important; }
   .home_qr, .cta_qr { display: none !important; }
@@ -128,7 +141,9 @@
   .home_hero-phone {
     width: 340px !important;
     max-width: 340px !important;
+    height: 680px !important;
     position: relative !important;
+    overflow: visible !important;
   }
   .home_hero-phone > div {
     width: 340px !important;
@@ -2407,6 +2422,20 @@ window.addEventListener("load", function () {
   updateStickyCta();
   window.addEventListener('scroll', updateStickyCta, { passive: true });
   window.addEventListener('resize', updateStickyCta);
+})();
+</script>
+<script>
+(function() {
+  var phone = document.querySelector('.home_hero-phone');
+  if (!phone || phone.querySelector('.hero-phone-replacement')) return;
+
+  var image = document.createElement('img');
+  image.src = 'assets/images/roz-expert-phone-mockup.png';
+  image.alt = 'Roz Expert app portfolio conversation on an iPhone';
+  image.className = 'home_hero-phone-img hero-phone-replacement';
+  image.loading = 'eager';
+  image.fetchPriority = 'high';
+  phone.prepend(image);
 })();
 </script>
 </body></html>
