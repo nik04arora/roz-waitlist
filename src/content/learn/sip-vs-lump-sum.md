@@ -62,6 +62,7 @@ relatedArticles:
   - what-is-a-mutual-fund
   - what-is-an-sip
   - how-to-invest-10000-per-month-in-mutual-funds
+  - sip-down-should-i-stop
 status: published
 featured: true
 disclosure: comparison
@@ -139,6 +140,8 @@ If markets rise steadily soon after the decision, a lump sum may finish ahead be
 If markets fall soon after the decision, an SIP may soften the initial impact because later instalments buy at lower NAVs and part of the planned amount was not yet invested. A lump sum would have exposed the full amount before the fall.
 
 Real markets rarely move in a straight line. They can fall, recover, rise and fall again. The result depends on the exact sequence of NAVs, the investment and redemption dates, and the scheme's expenses. Neither method wins in every possible market path.
+
+If you already have a recurring investment with a negative return, first diagnose [whether the SIP is down because of the market, the fund or a mismatch with your plan](/learn/sip-down-should-i-stop/) instead of changing methods automatically.
 
 ## Can you combine SIP and lump-sum investing?
 

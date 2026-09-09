@@ -57,6 +57,7 @@ relatedArticles:
   - what-is-a-mutual-fund
   - sip-vs-lump-sum
   - direct-vs-regular-mutual-funds
+  - sip-down-should-i-stop
 status: published
 featured: true
 disclosure: educational
@@ -112,6 +113,8 @@ An SIP does not make a risky fund safe. An SIP in an equity fund still carries s
 Your outcome depends on the scheme you choose, its costs, the prices at which each instalment buys units, how long you remain invested, and when you redeem. Review the scheme's Riskometer rather than treating every SIP as having the same risk.
 
 Keep money for emergencies and near-term expenses separate. You do not want to be forced to sell a market-linked investment when its value is down.
+
+If your existing instalments are showing a loss, use our guide to decide [whether to stop, pause or continue an SIP that is down](/learn/sip-down-should-i-stop/) before reacting to the return number alone.
 
 ## What does an SIP cost?
 
