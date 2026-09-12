@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Choosing a first mutual fund quote</title><description id="description">Choose the job for your money before you choose the fund.</description>
+  <defs><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="3" seed="129"/><feColorMatrix type="saturate" values="0"/></filter><pattern id="stitches" width="94" height="94" patternUnits="userSpaceOnUse"><path d="M47 11v16M0 58v16M94 58v16" fill="none" stroke="#e3a72f" stroke-width="4" stroke-linecap="round"/></pattern></defs>
+  <rect width="1200" height="630" fill="#063d33"/><rect width="1200" height="630" fill="#063d33" filter="url(#grain)" opacity=".2"/><rect x="803" width="397" height="630" fill="url(#stitches)" opacity=".9"/>
+  <text x="58" y="105" fill="#fdf3dc" font-family="Georgia, serif" font-size="70" font-weight="700">“</text><g fill="#fdf3dc" font-family="Georgia, serif" font-size="48"><text x="108" y="145">Choose the job for your money before</text><text x="108" y="212">you choose the fund.</text></g><text x="730" y="285" fill="#fdf3dc" font-family="Georgia, serif" font-size="70" font-weight="700">”</text><text x="108" y="421" fill="#e3a72f" font-family="Arial, sans-serif" font-size="30">Roz Invest</text>
+</svg>
