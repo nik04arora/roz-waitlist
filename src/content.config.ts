@@ -58,8 +58,14 @@ const learn = defineCollection({
     (entry) => entry.updatedAt >= entry.publishedAt,
     { message: 'updatedAt must be on or after publishedAt' }
   ).refine(
-    (entry) => !entry.reviewedAt || entry.reviewedAt >= entry.updatedAt,
-    { message: 'reviewedAt must be on or after updatedAt' }
+    (entry) =>
+      !entry.reviewedAt ||
+      entry.reviewedAt >= entry.updatedAt ||
+      (
+        entry.status === 'published' &&
+        entry.updatedAt.getTime() === entry.publishedAt.getTime()
+      ),
+    { message: 'reviewedAt must cover the latest content update' }
   ).refine(
     (entry) => Boolean(entry.reviewer) === Boolean(entry.reviewedAt),
     { message: 'reviewer and reviewedAt must be provided together' }
