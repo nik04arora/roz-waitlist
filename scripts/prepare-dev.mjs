@@ -19,4 +19,7 @@ for (const file of ['robots.txt', 'sitemap.xml']) {
   await copyFile(resolve(root, file), resolve(target, file));
 }
 
-await writeFile(resolve(target, 'index.html'), optimizeHomepageHtml(await readFile(resolve(root, 'index.html'), 'utf8')));
+await writeFile(resolve(target, 'index.html'), optimizeHomepageHtml(
+  await readFile(resolve(root, 'index.html'), 'utf8'),
+  await readFile(resolve(root, 'assets/css/home.min.css'), 'utf8')
+));

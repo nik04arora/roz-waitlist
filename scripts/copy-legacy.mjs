@@ -27,7 +27,9 @@ const legacyPages = [
   'legal/disclosures.html'
 ];
 
+const homepageStylesheet = await readFile(resolve(root, 'assets/css/home.min.css'), 'utf8');
+
 for (const page of legacyPages) {
   const html = await readFile(resolve(root, page), 'utf8');
-  await writeFile(resolve(dist, page), injectGoogleAnalytics(page === 'index.html' ? optimizeHomepageHtml(html) : html));
+  await writeFile(resolve(dist, page), injectGoogleAnalytics(page === 'index.html' ? optimizeHomepageHtml(html, homepageStylesheet) : html));
 }

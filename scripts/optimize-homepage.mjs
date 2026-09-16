@@ -1,6 +1,17 @@
 // The legacy homepage has a long, minified hero markup line. Replace its
 // obsolete iframe/SVG phone mockup at build time with a parser-discoverable image.
-export function optimizeHomepageHtml(html) {
+export function optimizeHomepageHtml(html, stylesheet) {
+  if (!stylesheet || stylesheet.includes('</style')) {
+    throw new Error('Expected a safe homepage stylesheet');
+  }
+
+  const stylesheetLink = '<link href="assets/css/home.min.css" rel="stylesheet" type="text/css"/>';
+  if (!html.includes(stylesheetLink)) throw new Error('Expected the render-blocking homepage stylesheet');
+  // Inline the base CSS so the first paint does not wait for another request.
+  // Relative font URLs must still resolve from the homepage, not assets/css/.
+  const inlineStylesheet = stylesheet.replaceAll('url(../fonts/', 'url(assets/fonts/');
+  html = html.replace(stylesheetLink, `<style id="homepage-base-css">${inlineStylesheet}</style>`);
+
   const phoneStart = html.indexOf('<div class="home_hero-phone">');
   const phoneEnd = html.indexOf('<div class="hero_round-top">', phoneStart);
   if (phoneStart < 0 || phoneEnd < 0 || html.indexOf('<div class="home_hero-phone">', phoneStart + 1) !== -1) {

@@ -35,11 +35,15 @@ async function htmlFiles(directory) {
 }
 
 const homepageSource = await readFile(resolve(root, 'index.html'), 'utf8');
+const homepageStylesheet = await readFile(resolve(root, 'assets/css/home.min.css'), 'utf8');
 const homepageBuilt = await readFile(resolve(dist, 'index.html'), 'utf8');
 const learnLink = '<a href="/learn/">Learn</a>';
 if (!homepageBuilt.includes(learnLink)) throw new Error('Built homepage is missing the Learn link.');
-if (homepageBuilt !== injectGoogleAnalytics(optimizeHomepageHtml(homepageSource))) {
+if (homepageBuilt !== injectGoogleAnalytics(optimizeHomepageHtml(homepageSource, homepageStylesheet))) {
   throw new Error('Built homepage differs from its source by more than the expected hero optimization and analytics tag.');
+}
+if (!homepageBuilt.includes('<style id="homepage-base-css">') || homepageBuilt.includes('<link href="assets/css/home.min.css"')) {
+  throw new Error('Built homepage must inline its render-blocking stylesheet.');
 }
 if (homepageBuilt.includes('roz-expert-phone-mockup.png') || homepageBuilt.includes('phone-mockup.html')) {
   throw new Error('Built homepage still contains the obsolete phone mockup.');
