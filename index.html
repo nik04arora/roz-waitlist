@@ -44,8 +44,7 @@
     width: 100%;
     height: 100%;
   }
-  /* Preserve the exact approved hero artwork and its original sizing behavior. */
-  .home_hero-bg { content: url("assets/images/home-hero-approved.avif") !important; }
+  /* The hero artwork uses a matching mobile crop in the production build. */
   .home_qr, .cta_qr { display: none !important; }
   html.w-mod-js:not(.w-mod-ix3) :is(.footer_bg, [footer-container], [gsap-card], .parallax-img, .home_newsletter-container.cc-modal, .nav_link, .nav_link-border, .nav_mobile, .nav_list, .nav_mobile-bottom, .hero_h1, .hero_h1-gradient, .hero_subhead, .home_hero-bg, .home_hero-ui, .home_hero-phone-img, .btn.cc-hero, .calculator_chart-line.cc-projected, .calculator_chart-line.cc-invested, section.calculator.section, section.calculator.section *, .nav_mobile-android, .nav_mobile-apple),
   :is(.hero_h1, .hero_h1-gradient, .hero_subhead, .home_hero-bg, .home_hero-ui, .home_hero-phone-img, .btn.cc-hero, section.calculator.section, section.calculator.section *) { visibility: visible !important; }

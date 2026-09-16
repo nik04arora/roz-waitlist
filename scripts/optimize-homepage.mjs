@@ -28,9 +28,10 @@ export function optimizeHomepageHtml(html, stylesheet) {
   if (!html.includes(oldPreload)) throw new Error('Expected the legacy hero background preload');
   html = html.replace(oldPreload, '<link rel="preload" as="image" href="assets/images/roz-expert-phone-mockup.avif" type="image/avif" fetchpriority="high"/>');
 
-  const oldBackground = '<img src="assets/images/home-hero-approved.avif" loading="eager" decoding="async" fetchpriority="high"';
+  const oldBackground = '<img src="assets/images/home-hero-approved.avif" loading="eager" decoding="async" fetchpriority="high" width="1573" height="1000" alt="" class="home_hero-bg"/>';
   if (!html.includes(oldBackground)) throw new Error('Expected the legacy hero background image');
-  html = html.replace(oldBackground, '<img src="assets/images/home-hero-approved.avif" loading="eager" decoding="async"');
+  const responsiveBackground = '<picture style="display:contents"><source media="(max-width: 767px)" srcset="assets/images/home-hero-mobile.avif" type="image/avif"/><img src="assets/images/home-hero-approved.avif" loading="eager" decoding="async" width="1573" height="1000" alt="" class="home_hero-bg"/></picture>';
+  html = html.replace(oldBackground, responsiveBackground);
 
   const oldScript = /<script>\s*\(function\(\) \{\s*var phone = document\.querySelector\('\.home_hero-phone'\);[\s\S]*?phone\.prepend\(image\);\s*\}\)\(\);\s*<\/script>/;
   if (!oldScript.test(html)) throw new Error('Expected the legacy phone insertion script');

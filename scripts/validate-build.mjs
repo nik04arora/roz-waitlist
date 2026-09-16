@@ -11,6 +11,7 @@ const requiredFiles = [
   'index.html',
   'assets/images/roz-expert-phone-mockup.avif',
   'assets/images/roz-expert-phone-mockup.webp',
+  'assets/images/home-hero-mobile.avif',
   'about/index.html',
   'legal/privacy-policy.html',
   'legal/cookie-policy.html',
@@ -44,6 +45,9 @@ if (homepageBuilt !== injectGoogleAnalytics(optimizeHomepageHtml(homepageSource,
 }
 if (!homepageBuilt.includes('<style id="homepage-base-css">') || homepageBuilt.includes('<link href="assets/css/home.min.css"')) {
   throw new Error('Built homepage must inline its render-blocking stylesheet.');
+}
+if (!homepageBuilt.includes('srcset="assets/images/home-hero-mobile.avif"')) {
+  throw new Error('Built homepage must serve the mobile hero background.');
 }
 if (homepageBuilt.includes('roz-expert-phone-mockup.png') || homepageBuilt.includes('phone-mockup.html')) {
   throw new Error('Built homepage still contains the obsolete phone mockup.');
