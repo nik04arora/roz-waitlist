@@ -10,6 +10,7 @@ const includeDrafts = process.env.INCLUDE_DRAFTS === 'true' || process.env.VERCE
 const requiredFiles = [
   'index.html',
   'assets/images/roz-expert-phone-mockup.avif',
+  'assets/images/roz-expert-phone-mockup-mobile.avif',
   'assets/images/roz-expert-phone-mockup.webp',
   'assets/images/home-hero-mobile.avif',
   'about/index.html',
@@ -48,6 +49,9 @@ if (!homepageBuilt.includes('<style id="homepage-base-css">') || homepageBuilt.i
 }
 if (!homepageBuilt.includes('srcset="assets/images/home-hero-mobile.avif"')) {
   throw new Error('Built homepage must serve the mobile hero background.');
+}
+if (!homepageBuilt.includes('srcset="assets/images/roz-expert-phone-mockup-mobile.avif"')) {
+  throw new Error('Built homepage must serve the mobile phone artwork.');
 }
 if (homepageBuilt.includes('roz-expert-phone-mockup.png') || homepageBuilt.includes('phone-mockup.html')) {
   throw new Error('Built homepage still contains the obsolete phone mockup.');

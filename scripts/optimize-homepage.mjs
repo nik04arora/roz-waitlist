@@ -19,6 +19,7 @@ export function optimizeHomepageHtml(html, stylesheet) {
   }
 
   const phone = `<div class="home_hero-phone"><picture class="hero-phone-replacement">
+    <source media="(max-width: 767px)" srcset="assets/images/roz-expert-phone-mockup-mobile.avif" type="image/avif" />
     <source srcset="assets/images/roz-expert-phone-mockup.avif" type="image/avif" />
     <img src="assets/images/roz-expert-phone-mockup.webp" width="891" height="1766" loading="eager" decoding="async" fetchpriority="high" alt="Roz Expert app portfolio conversation on an iPhone" class="home_hero-phone-img" />
   </picture></div>`;
@@ -26,7 +27,7 @@ export function optimizeHomepageHtml(html, stylesheet) {
 
   const oldPreload = '<link rel="preload" as="image" href="assets/images/home-hero-approved.avif" type="image/avif" fetchpriority="high"/>';
   if (!html.includes(oldPreload)) throw new Error('Expected the legacy hero background preload');
-  html = html.replace(oldPreload, '<link rel="preload" as="image" href="assets/images/roz-expert-phone-mockup.avif" type="image/avif" fetchpriority="high"/>');
+  html = html.replace(oldPreload, '<link rel="preload" as="image" href="assets/images/roz-expert-phone-mockup-mobile.avif" type="image/avif" fetchpriority="high" media="(max-width: 767px)"/><link rel="preload" as="image" href="assets/images/roz-expert-phone-mockup.avif" type="image/avif" fetchpriority="high" media="(min-width: 768px)"/>');
 
   const oldBackground = '<img src="assets/images/home-hero-approved.avif" loading="eager" decoding="async" fetchpriority="high" width="1573" height="1000" alt="" class="home_hero-bg"/>';
   if (!html.includes(oldBackground)) throw new Error('Expected the legacy hero background image');
