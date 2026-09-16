@@ -1,6 +1,7 @@
 import { access, readFile, readdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { GOOGLE_ANALYTICS_ID, injectGoogleAnalytics } from './google-analytics.mjs';
+import { optimizeHomepageHtml } from './optimize-homepage.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const dist = resolve(root, 'dist');
@@ -8,6 +9,8 @@ const includeDrafts = process.env.INCLUDE_DRAFTS === 'true' || process.env.VERCE
 
 const requiredFiles = [
   'index.html',
+  'assets/images/roz-expert-phone-mockup.avif',
+  'assets/images/roz-expert-phone-mockup.webp',
   'about/index.html',
   'legal/privacy-policy.html',
   'legal/cookie-policy.html',
@@ -35,8 +38,11 @@ const homepageSource = await readFile(resolve(root, 'index.html'), 'utf8');
 const homepageBuilt = await readFile(resolve(dist, 'index.html'), 'utf8');
 const learnLink = '<a href="/learn/">Learn</a>';
 if (!homepageBuilt.includes(learnLink)) throw new Error('Built homepage is missing the Learn link.');
-if (homepageBuilt !== injectGoogleAnalytics(homepageSource)) {
-  throw new Error('Built homepage differs from its source by more than the expected analytics tag.');
+if (homepageBuilt !== injectGoogleAnalytics(optimizeHomepageHtml(homepageSource))) {
+  throw new Error('Built homepage differs from its source by more than the expected hero optimization and analytics tag.');
+}
+if (homepageBuilt.includes('roz-expert-phone-mockup.png') || homepageBuilt.includes('phone-mockup.html')) {
+  throw new Error('Built homepage still contains the obsolete phone mockup.');
 }
 
 for (const path of ['about/index.html', 'legal/privacy-policy.html', 'legal/cookie-policy.html', 'legal/terms.html', 'legal/disclosures.html']) {

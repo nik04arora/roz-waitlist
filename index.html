@@ -39,6 +39,11 @@
     translate: -50% -30.56px;
     z-index: 11;
   }
+  .hero-phone-replacement > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
   /* Preserve the exact approved hero artwork and its original sizing behavior. */
   .home_hero-bg { content: url("assets/images/home-hero-approved.avif") !important; }
   .home_qr, .cta_qr { display: none !important; }
@@ -2430,7 +2435,7 @@ window.addEventListener("load", function () {
   if (!phone || phone.querySelector('.hero-phone-replacement')) return;
 
   var image = document.createElement('img');
-  image.src = 'assets/images/roz-expert-phone-mockup.png';
+  image.src = 'assets/images/roz-expert-phone-mockup.avif';
   image.alt = 'Roz Expert app portfolio conversation on an iPhone';
   image.className = 'home_hero-phone-img hero-phone-replacement';
   image.loading = 'eager';

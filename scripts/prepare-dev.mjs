@@ -1,5 +1,6 @@
-import { copyFile, cp, mkdir } from 'node:fs/promises';
+import { copyFile, cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { optimizeHomepageHtml } from './optimize-homepage.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const target = resolve(root, 'static');
@@ -14,6 +15,8 @@ for (const directory of ['about', 'legal', 'assets']) {
   });
 }
 
-for (const file of ['index.html', 'robots.txt', 'sitemap.xml']) {
+for (const file of ['robots.txt', 'sitemap.xml']) {
   await copyFile(resolve(root, file), resolve(target, file));
 }
+
+await writeFile(resolve(target, 'index.html'), optimizeHomepageHtml(await readFile(resolve(root, 'index.html'), 'utf8')));
