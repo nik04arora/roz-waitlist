@@ -91,6 +91,7 @@ module.exports = async function handler(req, res) {
       if (data && data.code === '23505') {
         return json(res, 200, {
           ok: true,
+          created: false,
           phone: phone,
           message: "You're already on the waitlist."
         });
@@ -104,6 +105,7 @@ module.exports = async function handler(req, res) {
 
     return json(res, 200, {
       ok: true,
+      created: true,
       phone: phone,
       message: "You're in. We'll text you when early access opens."
     });

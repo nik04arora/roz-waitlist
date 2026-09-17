@@ -2295,6 +2295,7 @@ window.addEventListener("load", function () {
     if (stickyCta) stickyCta.classList.add('is-modal-hidden');
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
+    if (typeof window.fbq === 'function') window.fbq('trackCustom', 'JoinWaitlist');
     document.body.style.overflow = 'hidden';
     if (submitButton) {
       submitButton.disabled = false;
@@ -2353,6 +2354,9 @@ window.addEventListener("load", function () {
         }
 
         if (phoneInput) phoneInput.value = result.phone || normalizedPhone;
+        if (result.created === true && typeof window.fbq === 'function') {
+          window.fbq('track', 'Lead');
+        }
         setStatus('success', result.message || "You're in. We'll text you when early access opens.");
       } catch (error) {
         setStatus('error', error.message || 'Could not join the waitlist right now. Please try again.');
@@ -2374,6 +2378,8 @@ window.addEventListener("load", function () {
     btn.setAttribute('aria-expanded', 'false');
     btn.addEventListener('click', openModal);
   });
+
+  if (window.location.hash === '#waitlist') openModal();
 
   if (scrim) scrim.addEventListener('click', closeModal);
   if (closeButton) closeButton.addEventListener('click', closeModal);

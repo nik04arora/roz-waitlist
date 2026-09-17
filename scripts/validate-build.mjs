@@ -102,9 +102,12 @@ for (const file of checkedFiles) {
     throw new Error(`Expected exactly one Google Analytics tag in ${file}`);
   }
   const metaInitCount = html.split(`fbq('init', '${META_PIXEL_ID}')`).length - 1;
+  const metaPageViewCount = html.split("fbq('track', 'PageView')").length - 1;
   const metaNoscriptCount = html.split(`www.facebook.com/tr?id=${META_PIXEL_ID}`).length - 1;
-  if (metaInitCount !== 1 || metaNoscriptCount !== 1) {
-    throw new Error(`Expected exactly one Meta Pixel snippet in ${file}`);
+  const head = html.split(/<\/head>/i)[0];
+  if (metaInitCount !== 1 || metaPageViewCount !== 1 || metaNoscriptCount !== 1 ||
+      !head.includes(`fbq('init', '${META_PIXEL_ID}')`)) {
+    throw new Error(`Expected one Meta Pixel PageView in the head of ${file}`);
   }
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1];
   const description = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)/i)?.[1]
