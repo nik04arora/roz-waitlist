@@ -24,7 +24,7 @@ function getSupabaseRestUrl(value) {
     .replace(/\/rest\/v1$/i, '') + '/rest/v1/waitlist';
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return json(res, 405, { error: 'Method not allowed' });

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
+import waitlistHandler from '../api/waitlist.js';
 
 const root = new URL('../', import.meta.url);
 const homepage = await readFile(new URL('index.html', root), 'utf8');
@@ -114,28 +115,33 @@ test('invalid, duplicate, and failed submissions do not record Lead', async () =
   }
 });
 
-const apiSource = await readFile(new URL('api/waitlist.js', root), 'utf8');
-
 async function apiRequest(duplicate) {
-  const module = { exports: null };
   const response = {
     setHeader() {},
     end(text) { this.body = JSON.parse(text); }
   };
-  vm.runInNewContext(apiSource, {
-    module,
-    process: { env: { SUPABASE_URL: 'https://test.supabase.co', SUPABASE_SERVICE_ROLE_KEY: 'test' } },
-    fetch: async () => ({
-      ok: !duplicate,
-      text: async () => JSON.stringify(duplicate ? { code: '23505' } : [{ id: 1 }])
-    }),
-    console
+  const priorUrl = process.env.SUPABASE_URL;
+  const priorKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const priorFetch = globalThis.fetch;
+  process.env.SUPABASE_URL = 'https://test.supabase.co';
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test';
+  globalThis.fetch = async () => ({
+    ok: !duplicate,
+    text: async () => JSON.stringify(duplicate ? { code: '23505' } : [{ id: 1 }])
   });
-  await module.exports({
-    method: 'POST',
-    body: { phone: '9876543210' },
-    headers: {}
-  }, response);
+  try {
+    await waitlistHandler({
+      method: 'POST',
+      body: { phone: '9876543210' },
+      headers: {}
+    }, response);
+  } finally {
+    globalThis.fetch = priorFetch;
+    if (priorUrl === undefined) delete process.env.SUPABASE_URL;
+    else process.env.SUPABASE_URL = priorUrl;
+    if (priorKey === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+    else process.env.SUPABASE_SERVICE_ROLE_KEY = priorKey;
+  }
   return response.body;
 }
 
