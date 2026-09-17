@@ -4,6 +4,7 @@ import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import '../styles/learn.css';
+import { metaPixelHeadHtml, metaPixelNoscriptHtml } from '../../scripts/meta-tracking.mjs';
 
 interface Props {
   title: string;
@@ -26,8 +27,10 @@ const props = Astro.props;
   <head>
     <SeoHead {...props} />
     <GoogleAnalytics />
+    <Fragment set:html={metaPixelHeadHtml} />
   </head>
   <body>
+    <Fragment set:html={metaPixelNoscriptHtml} />
     <a class="skip-link" href="#main-content">Skip to content</a>
     <SiteHeader />
     <main id="main-content">

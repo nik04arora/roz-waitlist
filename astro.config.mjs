@@ -3,6 +3,7 @@ import mdx from '@astrojs/mdx';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { injectGoogleAnalytics } from './scripts/google-analytics.mjs';
+import { injectMetaTracking } from './scripts/meta-tracking.mjs';
 
 function legacyDevRoutes() {
   const routeFiles = new Map([
@@ -30,7 +31,7 @@ function legacyDevRoutes() {
           if (!file) return next();
 
           const sourceHtml = await readFile(resolve(process.cwd(), file), 'utf8');
-          const html = injectGoogleAnalytics(sourceHtml);
+          const html = injectMetaTracking(injectGoogleAnalytics(sourceHtml));
 
           response.statusCode = 200;
           response.setHeader('Content-Type', 'text/html; charset=utf-8');

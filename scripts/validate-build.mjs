@@ -1,6 +1,7 @@
 import { access, readFile, readdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { GOOGLE_ANALYTICS_ID, injectGoogleAnalytics } from './google-analytics.mjs';
+import { META_PIXEL_ID, injectMetaTracking } from './meta-tracking.mjs';
 import { optimizeHomepageHtml } from './optimize-homepage.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -41,7 +42,7 @@ const homepageStylesheet = await readFile(resolve(root, 'assets/css/home.min.css
 const homepageBuilt = await readFile(resolve(dist, 'index.html'), 'utf8');
 const learnLink = '<a href="/learn/">Learn</a>';
 if (!homepageBuilt.includes(learnLink)) throw new Error('Built homepage is missing the Learn link.');
-if (homepageBuilt !== injectGoogleAnalytics(optimizeHomepageHtml(homepageSource, homepageStylesheet))) {
+if (homepageBuilt !== injectMetaTracking(injectGoogleAnalytics(optimizeHomepageHtml(homepageSource, homepageStylesheet)))) {
   throw new Error('Built homepage differs from its source by more than the expected hero optimization and analytics tag.');
 }
 if (!homepageBuilt.includes('<style id="homepage-base-css">') || homepageBuilt.includes('<link href="assets/css/home.min.css"')) {
@@ -62,7 +63,7 @@ for (const path of ['about/index.html', 'legal/privacy-policy.html', 'legal/cook
     readFile(resolve(root, path), 'utf8'),
     readFile(resolve(dist, path), 'utf8')
   ]);
-  if (injectGoogleAnalytics(source) !== built) throw new Error(`Legacy route changed unexpectedly during build: ${path}`);
+  if (injectMetaTracking(injectGoogleAnalytics(source)) !== built) throw new Error(`Legacy route changed unexpectedly during build: ${path}`);
 }
 
 const sitemap = await readFile(resolve(dist, 'sitemap.xml'), 'utf8');
@@ -99,6 +100,11 @@ for (const file of checkedFiles) {
   const configCount = html.split(`gtag('config', '${GOOGLE_ANALYTICS_ID}')`).length - 1;
   if (loaderCount !== 1 || configCount !== 1) {
     throw new Error(`Expected exactly one Google Analytics tag in ${file}`);
+  }
+  const metaInitCount = html.split(`fbq('init', '${META_PIXEL_ID}')`).length - 1;
+  const metaNoscriptCount = html.split(`www.facebook.com/tr?id=${META_PIXEL_ID}`).length - 1;
+  if (metaInitCount !== 1 || metaNoscriptCount !== 1) {
+    throw new Error(`Expected exactly one Meta Pixel snippet in ${file}`);
   }
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1];
   const description = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)/i)?.[1]
