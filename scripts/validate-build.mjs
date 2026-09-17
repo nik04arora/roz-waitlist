@@ -2,6 +2,7 @@ import { access, readFile, readdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { GOOGLE_ANALYTICS_ID, injectGoogleAnalytics } from './google-analytics.mjs';
 import { META_PIXEL_ID, injectMetaTracking } from './meta-tracking.mjs';
+import { CLARITY_PROJECT_ID, injectClarity } from './clarity-tracking.mjs';
 import { optimizeHomepageHtml } from './optimize-homepage.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -27,6 +28,17 @@ const requiredFiles = [
 for (const file of requiredFiles) await access(resolve(dist, file));
 await access(resolve(root, 'api/waitlist.js'));
 
+const vercelConfig = JSON.parse(await readFile(resolve(root, 'vercel.json'), 'utf8'));
+const csp = vercelConfig.headers?.flatMap(({ headers }) => headers || [])
+  .find(({ key }) => key.toLowerCase() === 'content-security-policy')?.value;
+for (const directive of ['script-src', 'connect-src', 'img-src']) {
+  const sources = csp?.split(';').map((part) => part.trim())
+    .find((part) => part.startsWith(`${directive} `));
+  if (!sources?.includes('https://*.clarity.ms') || !sources.includes('https://c.bing.com')) {
+    throw new Error(`Content Security Policy must allow Microsoft Clarity in ${directive}.`);
+  }
+}
+
 async function htmlFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const values = await Promise.all(entries.map(async (entry) => {
@@ -42,7 +54,7 @@ const homepageStylesheet = await readFile(resolve(root, 'assets/css/home.min.css
 const homepageBuilt = await readFile(resolve(dist, 'index.html'), 'utf8');
 const learnLink = '<a href="/learn/">Learn</a>';
 if (!homepageBuilt.includes(learnLink)) throw new Error('Built homepage is missing the Learn link.');
-if (homepageBuilt !== injectMetaTracking(injectGoogleAnalytics(optimizeHomepageHtml(homepageSource, homepageStylesheet)))) {
+if (homepageBuilt !== injectClarity(injectMetaTracking(injectGoogleAnalytics(optimizeHomepageHtml(homepageSource, homepageStylesheet))))) {
   throw new Error('Built homepage differs from its source by more than the expected hero optimization and analytics tag.');
 }
 if (!homepageBuilt.includes('<style id="homepage-base-css">') || homepageBuilt.includes('<link href="assets/css/home.min.css"')) {
@@ -63,7 +75,7 @@ for (const path of ['about/index.html', 'legal/privacy-policy.html', 'legal/cook
     readFile(resolve(root, path), 'utf8'),
     readFile(resolve(dist, path), 'utf8')
   ]);
-  if (injectMetaTracking(injectGoogleAnalytics(source)) !== built) throw new Error(`Legacy route changed unexpectedly during build: ${path}`);
+  if (injectClarity(injectMetaTracking(injectGoogleAnalytics(source))) !== built) throw new Error(`Legacy route changed unexpectedly during build: ${path}`);
 }
 
 const sitemap = await readFile(resolve(dist, 'sitemap.xml'), 'utf8');
@@ -108,6 +120,12 @@ for (const file of checkedFiles) {
   if (metaInitCount !== 1 || metaPageViewCount !== 1 || metaNoscriptCount !== 1 ||
       !head.includes(`fbq('init', '${META_PIXEL_ID}')`)) {
     throw new Error(`Expected one Meta Pixel PageView in the head of ${file}`);
+  }
+  const clarityLoaderCount = html.split('https://www.clarity.ms/tag/').length - 1;
+  const clarityIdCount = html.split(`"${CLARITY_PROJECT_ID}"`).length - 1;
+  if (clarityLoaderCount !== 1 || clarityIdCount !== 1 ||
+      !head.includes('https://www.clarity.ms/tag/') || !head.includes(`"${CLARITY_PROJECT_ID}"`)) {
+    throw new Error(`Expected one Microsoft Clarity tag in the head of ${file}`);
   }
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1];
   const description = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)/i)?.[1]
