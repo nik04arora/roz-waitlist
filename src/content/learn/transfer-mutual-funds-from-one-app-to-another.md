@@ -101,7 +101,7 @@ The receiving platform may not support every holding mode or service. Confirm it
 
 ## How can you check whether your mutual funds are in SOA or demat form?
 
-Check the official statement or holding record rather than relying only on the app dashboard. SOA holdings are normally identified by an AMC folio number. Demat holdings appear under a demat account connected to a DP ID and client ID.
+Check the official statement or holding record rather than relying only on the app dashboard. [SOA holdings](/learn/sip-without-demat-account/) are normally identified by an AMC folio number. Demat holdings appear under a demat account connected to a DP ID and client ID.
 
 AMFI's [Investor Service FAQs](https://www.amfiindia.com/investor/become-mf-distributor?zoneName=InvestorService), accessed 11 September 2026, describe a folio number as the account under which a person's units are recorded in the mutual fund's Unit Holders' Register. SEBI Investor's [Consolidated Account Statement guide](https://investor.sebi.gov.in/consolidated_account_statement.html), accessed the same day, explains that a CAS combines mutual fund transactions and securities held in demat accounts.
 

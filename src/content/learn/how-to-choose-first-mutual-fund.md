@@ -88,7 +88,7 @@ Do not convert broad labels such as equity, debt or hybrid into fixed holding-pe
 
 ## How should you use the Riskometer?
 
-Use the Riskometer to compare the scheme's current risk with the importance and timing of your goal. It is a screening label, not a return forecast or a personal fit score.
+Use the [Riskometer](/learn/mutual-fund-riskometer/) to compare the scheme's current risk with the importance and timing of your goal. It is a screening label, not a return forecast or a personal fit score.
 
 SEBI Investor's [Riskometer guide](https://investor.sebi.gov.in/riskometer.html), accessed 11 September 2026, describes six levels from Low to Very High. Check the latest label for both the scheme and benchmark, then inspect the assets that produced it.
 
@@ -129,7 +129,7 @@ Also check taxes under current law, but do not let a tax benefit turn an unsuita
 
 ## What plan and option are you actually buying?
 
-Confirm the full scheme name, Direct or Regular plan, and Growth or IDCW option before paying. Similar-looking labels can lead to a different cost or distribution treatment even when the underlying portfolio is shared.
+Confirm the full scheme name, Direct or Regular plan, and [Growth or IDCW option](/learn/growth-vs-idcw-mutual-funds/) before paying. Similar-looking labels can lead to a different cost or distribution treatment even when the underlying portfolio is shared.
 
 Use the order confirmation page as a final identity check:
 
@@ -145,7 +145,7 @@ Save the confirmation and compare it with the first account statement.
 
 ## How many mutual funds should a beginner choose?
 
-A beginner can start with one suitable fund when it performs the required portfolio role. More funds do not automatically mean better diversification because several schemes may own the same securities.
+A beginner can start with one suitable fund when it performs the required portfolio role. [More funds do not automatically mean better diversification](/learn/how-many-mutual-funds-should-you-have/) because several schemes may own the same securities.
 
 Add another scheme only when you can state its distinct job. If the reason is merely that it had a higher recent return, the portfolio may be collecting names rather than solving goals.
 
